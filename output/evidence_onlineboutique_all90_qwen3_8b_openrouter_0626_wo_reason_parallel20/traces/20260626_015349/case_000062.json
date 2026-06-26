@@ -1,0 +1,406 @@
+{
+  "case": {
+    "case_name": "case_000062",
+    "case_dir": "Benchmarks/OnlineBoutique_evidence/cases/case_000062",
+    "time_context": "evidence",
+    "available_files": {
+      "metrics": "Benchmarks/OnlineBoutique_evidence/cases/case_000062/simple_metrics.csv"
+    },
+    "possible_root_cause_components": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_reasons": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "possible_root_cause_services": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_metrics": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "service_dependency_graph": {
+      "nodes": [
+        "loadgenerator",
+        "frontend",
+        "checkoutservice",
+        "adservice",
+        "recommendationservice",
+        "productcatalogservice",
+        "cartservice",
+        "redis",
+        "paymentservice",
+        "emailservice",
+        "shippingservice",
+        "currencyservice"
+      ],
+      "edges": [
+        {
+          "caller": "loadgenerator",
+          "callee": "frontend"
+        },
+        {
+          "caller": "frontend",
+          "callee": "checkoutservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "adservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "recommendationservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "recommendationservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "paymentservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "emailservice"
+        },
+        {
+          "caller": "cartservice",
+          "callee": "redis"
+        }
+      ],
+      "available": true
+    },
+    "prediction_format": "Return ranked root causes as objects with `time` as Unix seconds, `component` as a candidate root cause service, and `reason` as a candidate root cause metric.",
+    "dataset": "Online Boutique",
+    "telemetry_time_range": {
+      "unit": "unix_seconds",
+      "start_time": 0,
+      "end_time": 1440,
+      "sources": {
+        "metrics": {
+          "column": "time",
+          "unit": "unix_seconds",
+          "start_time": 0,
+          "end_time": 1440,
+          "row_count": 1441
+        }
+      }
+    },
+    "available_read_apis": [
+      "get_evidence"
+    ],
+    "evidence_time_unit": "relative_seconds_from_case_start"
+  },
+  "prediction": [
+    "productcatalogservice_latency",
+    "checkoutservice_latency",
+    "currencyservice_latency"
+  ],
+  "final_ranking": [
+    {
+      "time": 120,
+      "component": "productcatalogservice",
+      "reason": "latency"
+    },
+    {
+      "time": 120,
+      "component": "checkoutservice",
+      "reason": "latency"
+    },
+    {
+      "time": 120,
+      "component": "currencyservice",
+      "reason": "latency"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Initial broad scan for metric anomalies"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Initial broad scan for metric anomalies"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 180,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 426,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    },\n    {\n      \"start_time\": 30,\n      \"end_time\": 60\n    },\n    {\n      \"start_time\": 60,\n      \"end_time\": 90\n    },\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    },\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=cartservice signal=latency.p90 value=0.00490956 unit=s dev=+3.0 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=cartservice signal=latency.p50 value=0.00317198 unit=s dev=+3.0 n=30\",\n    \"[metrics] id=M0003 window=0-30 component=shippingservice signal=latency.p90 value=0.00461176 unit=s dev=+2.0 n=30\",\n    \"[metrics] id=M0072 window=30-60 component=frontend signal=latency.p50 value=0.0455652 unit=s dev=-1.5 n=30\",\n    \"[metrics] id=M0073 window=30-60 component=recommendationservice signal=cpu value=2.3753 unit=percent dev=-1.3 n=30\",\n    \"[metrics] id=M0074 window=30-60 component=checkoutservice signal=latency.p90 value=0.207134 unit=s dev=-1.1 n=30\",\n    \"[metrics] id=M0143 window=60-90 component=adservice signal=mem value=109639680 unit=bytes dev=+1.7 n=30\",\n    \"[metrics] id=M0144 window=60-90 component=shippingservice signal=latency.p90 value=0.00460779 unit=s dev=+1.4 n=30\",\n    \"[metrics] id=M0145 window=60-90 component=checkoutservice signal=mem value=11609429.3 unit=bytes dev=-1.3 n=30\",\n    \"[metrics] id=M0214 window=90-120 component=checkoutservice signal=mem value=11548535.5 unit=bytes dev=-1.6 n=30\",\n    \"[metrics] id=M0215 window=90-120 component=shippingservice signal=latency.p50 value=0.00293463 unit=s dev=-1.5 n=30\",\n    \"[metrics] id=M0216 window=90-120 component=frontend signal=mem value=16718233.6 unit=bytes dev=-1.2 n=30\",\n    \"[metrics] id=M0285 window=120-150 component=currencyservice signal=latency.p50 value=0.00385704 unit=s dev=+1.7 n=30\",\n    \"[metrics] id=M0286 window=120-150 component=shippingservice signal=mem value=9066496 unit=bytes dev=+1.3 n=30\",\n    \"[metrics] id=M0287 window=120-150 component=adservice signal=cpu value=0.748495 unit=percent dev=+1.2 n=30\",\n    \"[metrics] id=M0356 window=150-180 component=redis signal=diskio value=28607.4 unit=bytes/s dev=+2.7 n=30\",\n    \"[metrics] id=M0357 window=150-180 component=productcatalogservice signal=latency.p50 value=0.00216958 unit=s dev=+2.1 n=30\",\n    \"[metrics] id=M0358 window=150-180 component=recommendationservice signal=mem value=48131822.9 unit=bytes dev=+1.8 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 180,\n          \"components\": []\n        },\n        \"reasoning\": \"Initial broad scan for metric anomalies\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 180,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 426,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    },\\n    {\\n      \\\"start_time\\\": 30,\\n      \\\"end_time\\\": 60\\n    },\\n    {\\n      \\\"start_time\\\": 60,\\n      \\\"end_time\\\": 90\\n    },\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    },\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=cartservice signal=latency.p90 value=0.00490956 unit=s dev=+3.0 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=cartservice signal=latency.p50 value=0.00317198 unit=s dev=+3.0 n=30\\\",\\n    \\\"[metrics] id=M0003 window=0-30 component=shippingservice signal=latency.p90 value=0.00461176 unit=s dev=+2.0 n=30\\\",\\n    \\\"[metrics] id=M0072 window=30-60 component=frontend signal=latency.p50 value=0.0455652 unit=s dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0073 window=30-60 component=recommendationservice signal=cpu value=2.3753 unit=percent dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0074 window=30-60 component=checkoutservice signal=latency.p90 value=0.207134 unit=s dev=-1.1 n=30\\\",\\n    \\\"[metrics] id=M0143 window=60-90 component=adservice signal=mem value=109639680 unit=bytes dev=+1.7 n=30\\\",\\n    \\\"[metrics] id=M0144 window=60-90 component=shippingservice signal=latency.p90 value=0.00460779 unit=s dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0145 window=60-90 component=checkoutservice signal=mem value=11609429.3 unit=bytes dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0214 window=90-120 component=checkoutservice signal=mem value=11548535.5 unit=bytes dev=-1.6 n=30\\\",\\n    \\\"[metrics] id=M0215 window=90-120 component=shippingservice signal=latency.p50 value=0.00293463 unit=s dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0216 window=90-120 component=frontend signal=mem value=16718233.6 unit=bytes dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0285 window=120-150 component=currencyservice signal=latency.p50 value=0.00385704 unit=s dev=+1.7 n=30\\\",\\n    \\\"[metrics] id=M0286 window=120-150 component=shippingservice signal=mem value=9066496 unit=bytes dev=+1.3 n=30\\\",\\n    \\\"[metrics] id=M0287 window=120-150 component=adservice signal=cpu value=0.748495 unit=percent dev=+1.2 n=30\\\",\\n    \\\"[metrics] id=M0356 window=150-180 component=redis signal=diskio value=28607.4 unit=bytes/s dev=+2.7 n=30\\\",\\n    \\\"[metrics] id=M0357 window=150-180 component=productcatalogservice signal=latency.p50 value=0.00216958 unit=s dev=+2.1 n=30\\\",\\n    \\\"[metrics] id=M0358 window=150-180 component=recommendationservice signal=mem value=48131822.9 unit=bytes dev=+1.8 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "checked productcatalogservice latency; anomaly +2.1 dev; implication root cause",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0357 window=120-150 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0358 window=120-150 component=recommendationservice signal=mem",
+            "[metrics] id=M0285 window=120-150 component=currencyservice signal=latency.p50"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "productcatalogservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 10.822,
+        "reasoner": 61.394,
+        "tool": 0.238,
+        "all": 72.454
+      }
+    },
+    {
+      "step": 2,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 90,
+              "end_time": 210,
+              "components": [
+                "productcatalogservice"
+              ]
+            },
+            "reasoning": "Validate traces for productcatalogservice in suspicious window 120-150"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 90,
+              "end_time": 210,
+              "components": [
+                "productcatalogservice"
+              ]
+            },
+            "reasoning": "Validate traces for productcatalogservice in suspicious window 120-150"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 90,\n    \"end_time\": 210,\n    \"components\": [\n      \"productcatalogservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 24,\n  \"matched_count\": 88,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    },\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    },\n    {\n      \"start_time\": 180,\n      \"end_time\": 210\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0246 window=90-120 component=productcatalogservice signal=workload value=148.1 unit=rps dev=+0.3 n=30\",\n    \"[metrics] id=M0249 window=90-120 component=productcatalogservice signal=latency.p50 value=0.00208125 unit=s dev=+0.3 n=30\",\n    \"[metrics] id=M0257 window=90-120 component=productcatalogservice signal=latency.p90 value=0.00442845 unit=s dev=+0.2 n=30\",\n    \"[traces] id=T0349 window=90-120 edge=recommendationservice>productcatalogservice op=ListProducts signal=latency.p99 value=154.7 unit=us dev=+3.4 n=294\",\n    \"[traces] id=T0350 window=90-120 edge=recommendationservice>productcatalogservice op=ListProducts signal=latency.self_p99 value=154.7 unit=us dev=+3.4 n=294\",\n    \"[traces] id=T0356 window=90-120 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=55 unit=count dev=+1.6 n=55\",\n    \"[metrics] id=M0300 window=120-150 component=productcatalogservice signal=latency.p90 value=0.0044349 unit=s dev=+0.7 n=30\",\n    \"[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p50 value=0.00210039 unit=s dev=+0.7 n=30\",\n    \"[metrics] id=M0310 window=120-150 component=productcatalogservice signal=workload value=140.5 unit=rps dev=-0.5 n=30\",\n    \"[traces] id=T0472 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.p99 value=77.6 unit=us dev=+2.2 n=1811\",\n    \"[traces] id=T0473 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.self_p99 value=77.6 unit=us dev=+2.2 n=1811\",\n    \"[traces] id=T0481 window=120-150 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=15 unit=count dev=-1.5 n=15\",\n    \"[metrics] id=M0357 window=150-180 component=productcatalogservice signal=latency.p50 value=0.00216958 unit=s dev=+2.1 n=30\",\n    \"[metrics] id=M0360 window=150-180 component=productcatalogservice signal=latency.p90 value=0.00444575 unit=s dev=+1.5 n=30\",\n    \"[metrics] id=M0377 window=150-180 component=productcatalogservice signal=mem value=10473335.5 unit=bytes dev=-0.8 n=30\",\n    \"[traces] id=T0583 window=150-180 edge=frontend>productcatalogservice op=GetProduct signal=latency.p99 value=77 unit=us dev=+2.1 n=1888\",\n    \"[traces] id=T0584 window=150-180 edge=frontend>productcatalogservice op=GetProduct signal=latency.self_p99 value=77 unit=us dev=+2.1 n=1888\",\n    \"[traces] id=T0586 window=150-180 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=62 unit=count dev=+2.1 n=62\",\n    \"[metrics] id=M0427 window=180-210 component=productcatalogservice signal=latency.p50 value=0.00218166 unit=s dev=+2.3 n=30\",\n    \"[metrics] id=M0437 window=180-210 component=productcatalogservice signal=latency.p90 value=0.0044437 unit=s dev=+1.4 n=30\",\n    \"[metrics] id=M0443 window=180-210 component=productcatalogservice signal=cpu value=4.314 unit=percent dev=+1.0 n=30\",\n    \"[traces] id=T0697 window=180-210 edge=frontend>productcatalogservice op=ListProducts signal=latency.p99 value=360.8 unit=us dev=+4.1 n=38\",\n    \"[traces] id=T0698 window=180-210 edge=frontend>productcatalogservice op=ListProducts signal=latency.self_p99 value=360.8 unit=us dev=+4.1 n=38\",\n    \"[traces] id=T0703 window=180-210 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.p99 value=68.83 unit=us dev=+2.1 n=42\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 90,\n          \"end_time\": 210,\n          \"components\": [\n            \"productcatalogservice\"\n          ]\n        },\n        \"reasoning\": \"Validate traces for productcatalogservice in suspicious window 120-150\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 90,\\n    \\\"end_time\\\": 210,\\n    \\\"components\\\": [\\n      \\\"productcatalogservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 24,\\n  \\\"matched_count\\\": 88,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    },\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    },\\n    {\\n      \\\"start_time\\\": 180,\\n      \\\"end_time\\\": 210\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0246 window=90-120 component=productcatalogservice signal=workload value=148.1 unit=rps dev=+0.3 n=30\\\",\\n    \\\"[metrics] id=M0249 window=90-120 component=productcatalogservice signal=latency.p50 value=0.00208125 unit=s dev=+0.3 n=30\\\",\\n    \\\"[metrics] id=M0257 window=90-120 component=productcatalogservice signal=latency.p90 value=0.00442845 unit=s dev=+0.2 n=30\\\",\\n    \\\"[traces] id=T0349 window=90-120 edge=recommendationservice>productcatalogservice op=ListProducts signal=latency.p99 value=154.7 unit=us dev=+3.4 n=294\\\",\\n    \\\"[traces] id=T0350 window=90-120 edge=recommendationservice>productcatalogservice op=ListProducts signal=latency.self_p99 value=154.7 unit=us dev=+3.4 n=294\\\",\\n    \\\"[traces] id=T0356 window=90-120 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=55 unit=count dev=+1.6 n=55\\\",\\n    \\\"[metrics] id=M0300 window=120-150 component=productcatalogservice signal=latency.p90 value=0.0044349 unit=s dev=+0.7 n=30\\\",\\n    \\\"[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p50 value=0.00210039 unit=s dev=+0.7 n=30\\\",\\n    \\\"[metrics] id=M0310 window=120-150 component=productcatalogservice signal=workload value=140.5 unit=rps dev=-0.5 n=30\\\",\\n    \\\"[traces] id=T0472 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.p99 value=77.6 unit=us dev=+2.2 n=1811\\\",\\n    \\\"[traces] id=T0473 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.self_p99 value=77.6 unit=us dev=+2.2 n=1811\\\",\\n    \\\"[traces] id=T0481 window=120-150 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=15 unit=count dev=-1.5 n=15\\\",\\n    \\\"[metrics] id=M0357 window=150-180 component=productcatalogservice signal=latency.p50 value=0.00216958 unit=s dev=+2.1 n=30\\\",\\n    \\\"[metrics] id=M0360 window=150-180 component=productcatalogservice signal=latency.p90 value=0.00444575 unit=s dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0377 window=150-180 component=productcatalogservice signal=mem value=10473335.5 unit=bytes dev=-0.8 n=30\\\",\\n    \\\"[traces] id=T0583 window=150-180 edge=frontend>productcatalogservice op=GetProduct signal=latency.p99 value=77 unit=us dev=+2.1 n=1888\\\",\\n    \\\"[traces] id=T0584 window=150-180 edge=frontend>productcatalogservice op=GetProduct signal=latency.self_p99 value=77 unit=us dev=+2.1 n=1888\\\",\\n    \\\"[traces] id=T0586 window=150-180 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=62 unit=count dev=+2.1 n=62\\\",\\n    \\\"[metrics] id=M0427 window=180-210 component=productcatalogservice signal=latency.p50 value=0.00218166 unit=s dev=+2.3 n=30\\\",\\n    \\\"[metrics] id=M0437 window=180-210 component=productcatalogservice signal=latency.p90 value=0.0044437 unit=s dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0443 window=180-210 component=productcatalogservice signal=cpu value=4.314 unit=percent dev=+1.0 n=30\\\",\\n    \\\"[traces] id=T0697 window=180-210 edge=frontend>productcatalogservice op=ListProducts signal=latency.p99 value=360.8 unit=us dev=+4.1 n=38\\\",\\n    \\\"[traces] id=T0698 window=180-210 edge=frontend>productcatalogservice op=ListProducts signal=latency.self_p99 value=360.8 unit=us dev=+4.1 n=38\\\",\\n    \\\"[traces] id=T0703 window=180-210 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.p99 value=68.83 unit=us dev=+2.1 n=42\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "checked productcatalogservice latency; anomaly +2.1 dev; implication root cause",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0357 window=120-150 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0358 window=120-150 component=recommendationservice signal=mem",
+            "[metrics] id=M0285 window=120-150 component=currencyservice signal=latency.p50",
+            "[metrics] id=M0357 window=150-180 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0360 window=150-180 component=productcatalogservice signal=latency.p90",
+            "[metrics] id=M0427 window=180-210 component=productcatalogservice signal=latency.p50"
+          ],
+          "traces": [
+            "[traces] id=T0583 window=150-180 edge=frontend>productcatalogservice op=GetProduct",
+            "[traces] id=T0586 window=150-180 edge=checkoutservice>productcatalogservice op=GetProduct",
+            "[traces] id=T0697 window=180-210 edge=frontend>productcatalogservice op=ListProducts"
+          ],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "productcatalogservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 13.535,
+        "reasoner": 24.921,
+        "tool": 0.034,
+        "all": 38.491
+      }
+    },
+    {
+      "step": 3,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 120,
+              "end_time": 150,
+              "components": [
+                "productcatalogservice"
+              ]
+            },
+            "reasoning": "Check logs for productcatalogservice during latency anomaly window"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 120,
+              "end_time": 150,
+              "components": [
+                "productcatalogservice"
+              ]
+            },
+            "reasoning": "Check logs for productcatalogservice during latency anomaly window"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 120,\n    \"end_time\": 150,\n    \"components\": [\n      \"productcatalogservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 6,\n  \"matched_count\": 22,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0300 window=120-150 component=productcatalogservice signal=latency.p90 value=0.0044349 unit=s dev=+0.7 n=30\",\n    \"[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p50 value=0.00210039 unit=s dev=+0.7 n=30\",\n    \"[metrics] id=M0310 window=120-150 component=productcatalogservice signal=workload value=140.5 unit=rps dev=-0.5 n=30\",\n    \"[traces] id=T0472 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.p99 value=77.6 unit=us dev=+2.2 n=1811\",\n    \"[traces] id=T0473 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.self_p99 value=77.6 unit=us dev=+2.2 n=1811\",\n    \"[traces] id=T0481 window=120-150 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=15 unit=count dev=-1.5 n=15\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 120,\n          \"end_time\": 150,\n          \"components\": [\n            \"productcatalogservice\"\n          ]\n        },\n        \"reasoning\": \"Check logs for productcatalogservice during latency anomaly window\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 120,\\n    \\\"end_time\\\": 150,\\n    \\\"components\\\": [\\n      \\\"productcatalogservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 6,\\n  \\\"matched_count\\\": 22,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0300 window=120-150 component=productcatalogservice signal=latency.p90 value=0.0044349 unit=s dev=+0.7 n=30\\\",\\n    \\\"[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p50 value=0.00210039 unit=s dev=+0.7 n=30\\\",\\n    \\\"[metrics] id=M0310 window=120-150 component=productcatalogservice signal=workload value=140.5 unit=rps dev=-0.5 n=30\\\",\\n    \\\"[traces] id=T0472 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.p99 value=77.6 unit=us dev=+2.2 n=1811\\\",\\n    \\\"[traces] id=T0473 window=120-150 edge=frontend>productcatalogservice op=GetProduct signal=latency.self_p99 value=77.6 unit=us dev=+2.2 n=1811\\\",\\n    \\\"[traces] id=T0481 window=120-150 edge=checkoutservice>productcatalogservice op=GetProduct signal=call.count value=15 unit=count dev=-1.5 n=15\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "checked productcatalogservice latency; anomaly +2.1 dev in metrics, +2.2 dev in traces; implication root cause",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0357 window=120-150 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0358 window=120-150 component=recommendationservice signal=mem",
+            "[metrics] id=M0285 window=120-150 component=currencyservice signal=latency.p50",
+            "[metrics] id=M0357 window=150-180 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0360 window=150-180 component=productcatalogservice signal=latency.p90",
+            "[metrics] id=M0427 window=180-210 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0300 window=120-150 component=productcatalogservice signal=latency.p90",
+            "[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p50",
+            "[metrics] id=M0310 window=120-150 component=productcatalogservice signal=workload"
+          ],
+          "traces": [
+            "[traces] id=T0583 window=150-180 edge=frontend>productcatalogservice op=GetProduct",
+            "[traces] id=T0586 window=150-180 edge=checkoutservice>productcatalogservice op=GetProduct",
+            "[traces] id=T0697 window=180-210 edge=frontend>productcatalogservice op=ListProducts",
+            "[traces] id=T0472 window=120-150 edge=frontend>productcatalogservice op=GetProduct",
+            "[traces] id=T0473 window=120-150 edge=frontend>productcatalogservice op=GetProduct",
+            "[traces] id=T0481 window=120-150 edge=checkoutservice>productcatalogservice op=GetProduct"
+          ],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "productcatalogservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 15.603,
+        "reasoner": 18.235,
+        "tool": 0.039,
+        "all": 33.877
+      }
+    },
+    {
+      "step": 4,
+      "controller": {
+        "completed": true
+      },
+      "observation": "Controller marked analysis complete.",
+      "reasoner": {
+        "analysis": "productcatalogservice latency anomalies in metrics and traces implicate root cause.",
+        "final_ranking": [
+          {
+            "time": 120,
+            "component": "productcatalogservice",
+            "reason": "latency"
+          },
+          {
+            "time": 120,
+            "component": "checkoutservice",
+            "reason": "latency"
+          },
+          {
+            "time": 120,
+            "component": "currencyservice",
+            "reason": "latency"
+          }
+        ]
+      },
+      "timing_s": {
+        "controller": 30.769,
+        "reasoner": 27.016,
+        "tool": 0.0,
+        "all": 57.785
+      }
+    }
+  ],
+  "timing_s": {
+    "all": 202.616
+  }
+}

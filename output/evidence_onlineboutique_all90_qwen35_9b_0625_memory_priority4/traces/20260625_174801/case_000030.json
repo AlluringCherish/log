@@ -1,0 +1,777 @@
+{
+  "case": {
+    "case_name": "case_000030",
+    "case_dir": "Benchmarks/OnlineBoutique_evidence/cases/case_000030",
+    "time_context": "evidence",
+    "available_files": {
+      "metrics": "Benchmarks/OnlineBoutique_evidence/cases/case_000030/simple_metrics.csv"
+    },
+    "possible_root_cause_components": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_reasons": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "possible_root_cause_services": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_metrics": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "service_dependency_graph": {
+      "nodes": [
+        "loadgenerator",
+        "frontend",
+        "checkoutservice",
+        "adservice",
+        "recommendationservice",
+        "productcatalogservice",
+        "cartservice",
+        "redis",
+        "paymentservice",
+        "emailservice",
+        "shippingservice",
+        "currencyservice"
+      ],
+      "edges": [
+        {
+          "caller": "loadgenerator",
+          "callee": "frontend"
+        },
+        {
+          "caller": "frontend",
+          "callee": "checkoutservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "adservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "recommendationservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "recommendationservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "paymentservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "emailservice"
+        },
+        {
+          "caller": "cartservice",
+          "callee": "redis"
+        }
+      ],
+      "available": true
+    },
+    "prediction_format": "Return ranked root causes as objects with `time` as Unix seconds, `component` as a candidate root cause service, and `reason` as a candidate root cause metric.",
+    "dataset": "Online Boutique",
+    "telemetry_time_range": {
+      "unit": "unix_seconds",
+      "start_time": 0,
+      "end_time": 1440,
+      "sources": {
+        "metrics": {
+          "column": "time",
+          "unit": "unix_seconds",
+          "start_time": 0,
+          "end_time": 1440,
+          "row_count": 1441
+        }
+      }
+    },
+    "available_read_apis": [
+      "get_evidence"
+    ],
+    "evidence_time_unit": "relative_seconds_from_case_start"
+  },
+  "prediction": [
+    "recommendationservice_latency",
+    "frontend_latency",
+    "currencyservice_latency"
+  ],
+  "final_ranking": [
+    {
+      "time": 1080,
+      "component": "recommendationservice",
+      "reason": "latency"
+    },
+    {
+      "time": 1200,
+      "component": "frontend",
+      "reason": "latency"
+    },
+    {
+      "time": 780,
+      "component": "currencyservice",
+      "reason": "latency"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Starting metrics-first full time scan for the first 180-second chunk to identify suspicious components and reasons."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Starting metrics-first full time scan for the first 180-second chunk to identify suspicious components and reasons."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 180,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    },\n    {\n      \"start_time\": 30,\n      \"end_time\": 60\n    },\n    {\n      \"start_time\": 60,\n      \"end_time\": 90\n    },\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    },\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=adservice signal=latency.p90 value=0.00465686 unit=s dev=+4.0 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=productcatalogservice signal=latency.p90 value=0.00443734 unit=s dev=+3.5 n=30\",\n    \"[metrics] id=M0003 window=0-30 component=adservice signal=latency.p50 value=0.00302815 unit=s dev=+3.4 n=30\",\n    \"[metrics] id=M0076 window=30-60 component=adservice signal=latency.p50 value=0.00301286 unit=s dev=+1.6 n=30\",\n    \"[metrics] id=M0077 window=30-60 component=currencyservice signal=workload value=88.63 unit=rps dev=+1.5 n=30\",\n    \"[metrics] id=M0078 window=30-60 component=paymentservice signal=latency.p50 value=0.00341618 unit=s dev=+1.4 n=30\",\n    \"[metrics] id=M0151 window=60-90 component=shippingservice signal=latency.p90 value=0.00472527 unit=s dev=+2.0 n=30\",\n    \"[metrics] id=M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30\",\n    \"[metrics] id=M0153 window=60-90 component=checkoutservice signal=cpu value=0.530765 unit=percent dev=+1.5 n=30\",\n    \"[metrics] id=M0226 window=90-120 component=checkoutservice signal=latency.p90 value=0.207064 unit=s dev=-1.3 n=30\",\n    \"[metrics] id=M0227 window=90-120 component=adservice signal=workload value=14.1 unit=rps dev=-1.3 n=30\",\n    \"[metrics] id=M0228 window=90-120 component=currencyservice signal=latency.p50 value=0.00395212 unit=s dev=-1.2 n=30\",\n    \"[metrics] id=M0301 window=120-150 component=frontend signal=mem value=17049736.5 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0302 window=120-150 component=checkoutservice signal=latency.p90 value=0.201656 unit=s dev=-1.7 n=30\",\n    \"[metrics] id=M0303 window=120-150 component=currencyservice signal=latency.p50 value=0.00392668 unit=s dev=-1.3 n=30\",\n    \"[metrics] id=M0376 window=150-180 component=shippingservice signal=latency.p50 value=0.00287961 unit=s dev=-1.7 n=30\",\n    \"[metrics] id=M0377 window=150-180 component=recommendationservice signal=cpu value=2.466 unit=percent dev=-1.3 n=30\",\n    \"[metrics] id=M0378 window=150-180 component=currencyservice signal=latency.p50 value=0.00394802 unit=s dev=-1.2 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 180,\n          \"components\": []\n        },\n        \"reasoning\": \"Starting metrics-first full time scan for the first 180-second chunk to identify suspicious components and reasons.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 180,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    },\\n    {\\n      \\\"start_time\\\": 30,\\n      \\\"end_time\\\": 60\\n    },\\n    {\\n      \\\"start_time\\\": 60,\\n      \\\"end_time\\\": 90\\n    },\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    },\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=adservice signal=latency.p90 value=0.00465686 unit=s dev=+4.0 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=productcatalogservice signal=latency.p90 value=0.00443734 unit=s dev=+3.5 n=30\\\",\\n    \\\"[metrics] id=M0003 window=0-30 component=adservice signal=latency.p50 value=0.00302815 unit=s dev=+3.4 n=30\\\",\\n    \\\"[metrics] id=M0076 window=30-60 component=adservice signal=latency.p50 value=0.00301286 unit=s dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M0077 window=30-60 component=currencyservice signal=workload value=88.63 unit=rps dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0078 window=30-60 component=paymentservice signal=latency.p50 value=0.00341618 unit=s dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0151 window=60-90 component=shippingservice signal=latency.p90 value=0.00472527 unit=s dev=+2.0 n=30\\\",\\n    \\\"[metrics] id=M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M0153 window=60-90 component=checkoutservice signal=cpu value=0.530765 unit=percent dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0226 window=90-120 component=checkoutservice signal=latency.p90 value=0.207064 unit=s dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0227 window=90-120 component=adservice signal=workload value=14.1 unit=rps dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0228 window=90-120 component=currencyservice signal=latency.p50 value=0.00395212 unit=s dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0301 window=120-150 component=frontend signal=mem value=17049736.5 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0302 window=120-150 component=checkoutservice signal=latency.p90 value=0.201656 unit=s dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0303 window=120-150 component=currencyservice signal=latency.p50 value=0.00392668 unit=s dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0376 window=150-180 component=shippingservice signal=latency.p50 value=0.00287961 unit=s dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0377 window=150-180 component=recommendationservice signal=cpu value=2.466 unit=percent dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0378 window=150-180 component=currencyservice signal=latency.p50 value=0.00394802 unit=s dev=-1.2 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 0-180s metrics. No severe anomalies (dev<+2). Checkoutservice latency dev=+1.6 at 60-90s is the strongest signal. No root cause confirmed yet.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "checkoutservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 2.977,
+        "reasoner": 7.927,
+        "tool": 0.128,
+        "all": 11.033
+      }
+    },
+    {
+      "step": 2,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 180,
+              "end_time": 360,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (180-360) to cover the full telemetry range."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 180,
+              "end_time": 360,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (180-360) to cover the full telemetry range."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 180,\n    \"end_time\": 360,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 180,\n      \"end_time\": 210\n    },\n    {\n      \"start_time\": 210,\n      \"end_time\": 240\n    },\n    {\n      \"start_time\": 240,\n      \"end_time\": 270\n    },\n    {\n      \"start_time\": 270,\n      \"end_time\": 300\n    },\n    {\n      \"start_time\": 300,\n      \"end_time\": 330\n    },\n    {\n      \"start_time\": 330,\n      \"end_time\": 360\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30\",\n    \"[metrics] id=M0452 window=180-210 component=cartservice signal=latency.p50 value=0.00304507 unit=s dev=-1.5 n=30\",\n    \"[metrics] id=M0453 window=180-210 component=adservice signal=mem value=112662801.1 unit=bytes dev=-1.5 n=30\",\n    \"[metrics] id=M0526 window=210-240 component=adservice signal=mem value=112653243.7 unit=bytes dev=-1.6 n=30\",\n    \"[metrics] id=M0527 window=210-240 component=paymentservice signal=mem value=44748800 unit=bytes dev=-1.6 n=30\",\n    \"[metrics] id=M0528 window=210-240 component=cartservice signal=latency.p50 value=0.00305263 unit=s dev=-1.3 n=30\",\n    \"[metrics] id=M0601 window=240-270 component=frontend signal=workload value=11 unit=rps dev=-2.1 n=30\",\n    \"[metrics] id=M0602 window=240-270 component=frontend signal=mem value=18280448 unit=bytes dev=+1.9 n=30\",\n    \"[metrics] id=M0603 window=240-270 component=cartservice signal=workload value=22.34 unit=rps dev=-1.8 n=30\",\n    \"[metrics] id=M0676 window=270-300 component=recommendationservice signal=latency.p90 value=0.00965861 unit=s dev=+1.8 n=30\",\n    \"[metrics] id=M0677 window=270-300 component=recommendationservice signal=latency.p50 value=0.00753232 unit=s dev=+1.7 n=30\",\n    \"[metrics] id=M0678 window=270-300 component=checkoutservice signal=mem value=12294553.6 unit=bytes dev=+1.1 n=30\",\n    \"[metrics] id=M0751 window=300-330 component=adservice signal=mem value=112911837.9 unit=bytes dev=+1.8 n=30\",\n    \"[metrics] id=M0752 window=300-330 component=shippingservice signal=mem value=8937472 unit=bytes dev=-1.8 n=30\",\n    \"[metrics] id=M0753 window=300-330 component=frontend signal=latency.p90 value=0.225621 unit=s dev=+1.7 n=30\",\n    \"[metrics] id=M0826 window=330-360 component=cartservice signal=cpu value=1.5753 unit=percent dev=-1.5 n=30\",\n    \"[metrics] id=M0827 window=330-360 component=shippingservice signal=mem value=8981026.1 unit=bytes dev=-1.2 n=30\",\n    \"[metrics] id=M0828 window=330-360 component=emailservice signal=mem value=43979980.8 unit=bytes dev=+1.2 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 180,\n          \"end_time\": 360,\n          \"components\": []\n        },\n        \"reasoning\": \"Continuing metrics-first full time scan for the next 180-second chunk (180-360) to cover the full telemetry range.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 180,\\n    \\\"end_time\\\": 360,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 180,\\n      \\\"end_time\\\": 210\\n    },\\n    {\\n      \\\"start_time\\\": 210,\\n      \\\"end_time\\\": 240\\n    },\\n    {\\n      \\\"start_time\\\": 240,\\n      \\\"end_time\\\": 270\\n    },\\n    {\\n      \\\"start_time\\\": 270,\\n      \\\"end_time\\\": 300\\n    },\\n    {\\n      \\\"start_time\\\": 300,\\n      \\\"end_time\\\": 330\\n    },\\n    {\\n      \\\"start_time\\\": 330,\\n      \\\"end_time\\\": 360\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30\\\",\\n    \\\"[metrics] id=M0452 window=180-210 component=cartservice signal=latency.p50 value=0.00304507 unit=s dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0453 window=180-210 component=adservice signal=mem value=112662801.1 unit=bytes dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0526 window=210-240 component=adservice signal=mem value=112653243.7 unit=bytes dev=-1.6 n=30\\\",\\n    \\\"[metrics] id=M0527 window=210-240 component=paymentservice signal=mem value=44748800 unit=bytes dev=-1.6 n=30\\\",\\n    \\\"[metrics] id=M0528 window=210-240 component=cartservice signal=latency.p50 value=0.00305263 unit=s dev=-1.3 n=30\\\",\\n    \\\"[metrics] id=M0601 window=240-270 component=frontend signal=workload value=11 unit=rps dev=-2.1 n=30\\\",\\n    \\\"[metrics] id=M0602 window=240-270 component=frontend signal=mem value=18280448 unit=bytes dev=+1.9 n=30\\\",\\n    \\\"[metrics] id=M0603 window=240-270 component=cartservice signal=workload value=22.34 unit=rps dev=-1.8 n=30\\\",\\n    \\\"[metrics] id=M0676 window=270-300 component=recommendationservice signal=latency.p90 value=0.00965861 unit=s dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M0677 window=270-300 component=recommendationservice signal=latency.p50 value=0.00753232 unit=s dev=+1.7 n=30\\\",\\n    \\\"[metrics] id=M0678 window=270-300 component=checkoutservice signal=mem value=12294553.6 unit=bytes dev=+1.1 n=30\\\",\\n    \\\"[metrics] id=M0751 window=300-330 component=adservice signal=mem value=112911837.9 unit=bytes dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M0752 window=300-330 component=shippingservice signal=mem value=8937472 unit=bytes dev=-1.8 n=30\\\",\\n    \\\"[metrics] id=M0753 window=300-330 component=frontend signal=latency.p90 value=0.225621 unit=s dev=+1.7 n=30\\\",\\n    \\\"[metrics] id=M0826 window=330-360 component=cartservice signal=cpu value=1.5753 unit=percent dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0827 window=330-360 component=shippingservice signal=mem value=8981026.1 unit=bytes dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0828 window=330-360 component=emailservice signal=mem value=43979980.8 unit=bytes dev=+1.2 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 180-360s metrics. No severe anomalies (dev<+2.5). Redis diskio dev=+2.5 is minor. No root cause confirmed yet.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "redis",
+              "reason": "diskio"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.504,
+        "reasoner": 7.586,
+        "tool": 0.015,
+        "all": 11.105
+      }
+    },
+    {
+      "step": 3,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 360,
+              "end_time": 540,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (360-540) to cover the full telemetry range."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 360,
+              "end_time": 540,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (360-540) to cover the full telemetry range."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 360,\n    \"end_time\": 540,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 360,\n      \"end_time\": 390\n    },\n    {\n      \"start_time\": 390,\n      \"end_time\": 420\n    },\n    {\n      \"start_time\": 420,\n      \"end_time\": 450\n    },\n    {\n      \"start_time\": 450,\n      \"end_time\": 480\n    },\n    {\n      \"start_time\": 480,\n      \"end_time\": 510\n    },\n    {\n      \"start_time\": 510,\n      \"end_time\": 540\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30\",\n    \"[metrics] id=M0902 window=360-390 component=cartservice signal=cpu value=2.5239 unit=percent dev=+1.5 n=30\",\n    \"[metrics] id=M0903 window=360-390 component=cartservice signal=mem value=44803959.5 unit=bytes dev=+1.2 n=30\",\n    \"[metrics] id=M0976 window=390-420 component=adservice signal=diskio value=157869.9 unit=bytes/s dev=+1.7 n=30\",\n    \"[metrics] id=M0977 window=390-420 component=frontend signal=latency.p50 value=0.0587688 unit=s dev=+1.4 n=30\",\n    \"[metrics] id=M0978 window=390-420 component=paymentservice signal=latency.p90 value=0.0070175 unit=s dev=+1.3 n=30\",\n    \"[metrics] id=M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30\",\n    \"[metrics] id=M1052 window=420-450 component=recommendationservice signal=latency.p90 value=0.00966287 unit=s dev=+1.9 n=30\",\n    \"[metrics] id=M1053 window=420-450 component=recommendationservice signal=mem value=46722525.9 unit=bytes dev=+1.6 n=30\",\n    \"[metrics] id=M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30\",\n    \"[metrics] id=M1127 window=450-480 component=recommendationservice signal=latency.p90 value=0.00967293 unit=s dev=+2.1 n=30\",\n    \"[metrics] id=M1128 window=450-480 component=adservice signal=diskio value=162356.3 unit=bytes/s dev=+1.8 n=30\",\n    \"[metrics] id=M1201 window=480-510 component=redis signal=diskio value=13318.8 unit=bytes/s dev=+1.8 n=30\",\n    \"[metrics] id=M1202 window=480-510 component=shippingservice signal=mem value=8960136.5 unit=bytes dev=-1.5 n=30\",\n    \"[metrics] id=M1203 window=480-510 component=adservice signal=mem value=112889856 unit=bytes dev=+1.5 n=30\",\n    \"[metrics] id=M1276 window=510-540 component=checkoutservice signal=latency.p90 value=0.204171 unit=s dev=-1.5 n=30\",\n    \"[metrics] id=M1277 window=510-540 component=recommendationservice signal=latency.p50 value=0.00742226 unit=s dev=-1.5 n=30\",\n    \"[metrics] id=M1278 window=510-540 component=shippingservice signal=mem value=8969284.3 unit=bytes dev=-1.4 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 360,\n          \"end_time\": 540,\n          \"components\": []\n        },\n        \"reasoning\": \"Continuing metrics-first full time scan for the next 180-second chunk (360-540) to cover the full telemetry range.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 360,\\n    \\\"end_time\\\": 540,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 360,\\n      \\\"end_time\\\": 390\\n    },\\n    {\\n      \\\"start_time\\\": 390,\\n      \\\"end_time\\\": 420\\n    },\\n    {\\n      \\\"start_time\\\": 420,\\n      \\\"end_time\\\": 450\\n    },\\n    {\\n      \\\"start_time\\\": 450,\\n      \\\"end_time\\\": 480\\n    },\\n    {\\n      \\\"start_time\\\": 480,\\n      \\\"end_time\\\": 510\\n    },\\n    {\\n      \\\"start_time\\\": 510,\\n      \\\"end_time\\\": 540\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30\\\",\\n    \\\"[metrics] id=M0902 window=360-390 component=cartservice signal=cpu value=2.5239 unit=percent dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0903 window=360-390 component=cartservice signal=mem value=44803959.5 unit=bytes dev=+1.2 n=30\\\",\\n    \\\"[metrics] id=M0976 window=390-420 component=adservice signal=diskio value=157869.9 unit=bytes/s dev=+1.7 n=30\\\",\\n    \\\"[metrics] id=M0977 window=390-420 component=frontend signal=latency.p50 value=0.0587688 unit=s dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0978 window=390-420 component=paymentservice signal=latency.p90 value=0.0070175 unit=s dev=+1.3 n=30\\\",\\n    \\\"[metrics] id=M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30\\\",\\n    \\\"[metrics] id=M1052 window=420-450 component=recommendationservice signal=latency.p90 value=0.00966287 unit=s dev=+1.9 n=30\\\",\\n    \\\"[metrics] id=M1053 window=420-450 component=recommendationservice signal=mem value=46722525.9 unit=bytes dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30\\\",\\n    \\\"[metrics] id=M1127 window=450-480 component=recommendationservice signal=latency.p90 value=0.00967293 unit=s dev=+2.1 n=30\\\",\\n    \\\"[metrics] id=M1128 window=450-480 component=adservice signal=diskio value=162356.3 unit=bytes/s dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M1201 window=480-510 component=redis signal=diskio value=13318.8 unit=bytes/s dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M1202 window=480-510 component=shippingservice signal=mem value=8960136.5 unit=bytes dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M1203 window=480-510 component=adservice signal=mem value=112889856 unit=bytes dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M1276 window=510-540 component=checkoutservice signal=latency.p90 value=0.204171 unit=s dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M1277 window=510-540 component=recommendationservice signal=latency.p50 value=0.00742226 unit=s dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M1278 window=510-540 component=shippingservice signal=mem value=8969284.3 unit=bytes dev=-1.4 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 360-540s metrics. No severe anomalies (dev<+3.3). Redis diskio dev=+2.1 is minor. No root cause confirmed yet.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30",
+            "M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30",
+            "M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30",
+            "M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "redis",
+              "reason": "diskio"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.492,
+        "reasoner": 10.901,
+        "tool": 0.015,
+        "all": 14.408
+      }
+    },
+    {
+      "step": 4,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 540,
+              "end_time": 720,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (540-720) to cover the full telemetry range."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 540,
+              "end_time": 720,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (540-720) to cover the full telemetry range."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 540,\n    \"end_time\": 720,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 540,\n      \"end_time\": 570\n    },\n    {\n      \"start_time\": 570,\n      \"end_time\": 600\n    },\n    {\n      \"start_time\": 600,\n      \"end_time\": 630\n    },\n    {\n      \"start_time\": 630,\n      \"end_time\": 660\n    },\n    {\n      \"start_time\": 660,\n      \"end_time\": 690\n    },\n    {\n      \"start_time\": 690,\n      \"end_time\": 720\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30\",\n    \"[metrics] id=M1352 window=540-570 component=recommendationservice signal=mem value=46715699.2 unit=bytes dev=+1.4 n=30\",\n    \"[metrics] id=M1353 window=540-570 component=checkoutservice signal=mem value=11811089.1 unit=bytes dev=-1.4 n=30\",\n    \"[metrics] id=M1426 window=570-600 component=shippingservice signal=mem value=8996317.9 unit=bytes dev=-1.0 n=30\",\n    \"[metrics] id=M1427 window=570-600 component=shippingservice signal=latency.p50 value=0.00290412 unit=s dev=-1.0 n=30\",\n    \"[metrics] id=M1428 window=570-600 component=paymentservice signal=latency.p90 value=0.00484489 unit=s dev=-0.9 n=30\",\n    \"[metrics] id=M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30\",\n    \"[metrics] id=M1502 window=600-630 component=cartservice signal=latency.p50 value=0.0031542 unit=s dev=+1.3 n=30\",\n    \"[metrics] id=M1503 window=600-630 component=paymentservice signal=cpu value=0.479957 unit=percent dev=-1.2 n=30\",\n    \"[metrics] id=M1576 window=630-660 component=shippingservice signal=latency.p50 value=0.00299615 unit=s dev=+1.6 n=30\",\n    \"[metrics] id=M1577 window=630-660 component=currencyservice signal=latency.p90 value=0.0611343 unit=s dev=+1.6 n=30\",\n    \"[metrics] id=M1578 window=630-660 component=currencyservice signal=workload value=88.91 unit=rps dev=+1.6 n=30\",\n    \"[metrics] id=M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30\",\n    \"[metrics] id=M1652 window=660-690 component=paymentservice signal=cpu value=0.922032 unit=percent dev=+1.9 n=30\",\n    \"[metrics] id=M1653 window=660-690 component=checkoutservice signal=cpu value=0.560122 unit=percent dev=+1.8 n=30\",\n    \"[metrics] id=M1726 window=690-720 component=recommendationservice signal=latency.p50 value=0.00741347 unit=s dev=-1.7 n=30\",\n    \"[metrics] id=M1727 window=690-720 component=shippingservice signal=workload value=5.7711 unit=rps dev=-1.5 n=30\",\n    \"[metrics] id=M1728 window=690-720 component=paymentservice signal=latency.p50 value=0.00306564 unit=s dev=-1.4 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 540,\n          \"end_time\": 720,\n          \"components\": []\n        },\n        \"reasoning\": \"Continuing metrics-first full time scan for the next 180-second chunk (540-720) to cover the full telemetry range.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 540,\\n    \\\"end_time\\\": 720,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 540,\\n      \\\"end_time\\\": 570\\n    },\\n    {\\n      \\\"start_time\\\": 570,\\n      \\\"end_time\\\": 600\\n    },\\n    {\\n      \\\"start_time\\\": 600,\\n      \\\"end_time\\\": 630\\n    },\\n    {\\n      \\\"start_time\\\": 630,\\n      \\\"end_time\\\": 660\\n    },\\n    {\\n      \\\"start_time\\\": 660,\\n      \\\"end_time\\\": 690\\n    },\\n    {\\n      \\\"start_time\\\": 690,\\n      \\\"end_time\\\": 720\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M1352 window=540-570 component=recommendationservice signal=mem value=46715699.2 unit=bytes dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M1353 window=540-570 component=checkoutservice signal=mem value=11811089.1 unit=bytes dev=-1.4 n=30\\\",\\n    \\\"[metrics] id=M1426 window=570-600 component=shippingservice signal=mem value=8996317.9 unit=bytes dev=-1.0 n=30\\\",\\n    \\\"[metrics] id=M1427 window=570-600 component=shippingservice signal=latency.p50 value=0.00290412 unit=s dev=-1.0 n=30\\\",\\n    \\\"[metrics] id=M1428 window=570-600 component=paymentservice signal=latency.p90 value=0.00484489 unit=s dev=-0.9 n=30\\\",\\n    \\\"[metrics] id=M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30\\\",\\n    \\\"[metrics] id=M1502 window=600-630 component=cartservice signal=latency.p50 value=0.0031542 unit=s dev=+1.3 n=30\\\",\\n    \\\"[metrics] id=M1503 window=600-630 component=paymentservice signal=cpu value=0.479957 unit=percent dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M1576 window=630-660 component=shippingservice signal=latency.p50 value=0.00299615 unit=s dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M1577 window=630-660 component=currencyservice signal=latency.p90 value=0.0611343 unit=s dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M1578 window=630-660 component=currencyservice signal=workload value=88.91 unit=rps dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30\\\",\\n    \\\"[metrics] id=M1652 window=660-690 component=paymentservice signal=cpu value=0.922032 unit=percent dev=+1.9 n=30\\\",\\n    \\\"[metrics] id=M1653 window=660-690 component=checkoutservice signal=cpu value=0.560122 unit=percent dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M1726 window=690-720 component=recommendationservice signal=latency.p50 value=0.00741347 unit=s dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M1727 window=690-720 component=shippingservice signal=workload value=5.7711 unit=rps dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M1728 window=690-720 component=paymentservice signal=latency.p50 value=0.00306564 unit=s dev=-1.4 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 540-720s metrics. No severe anomalies (dev<+2.3). Redis mem dev=+2.3 is minor. No root cause confirmed yet.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30",
+            "M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30",
+            "M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30",
+            "M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30",
+            "M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30",
+            "M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30",
+            "M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "redis",
+              "reason": "mem"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.562,
+        "reasoner": 11.312,
+        "tool": 0.015,
+        "all": 14.889
+      }
+    },
+    {
+      "step": 5,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 720,
+              "end_time": 900,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (720-900) to cover the full telemetry range."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 720,
+              "end_time": 900,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (720-900) to cover the full telemetry range."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 720,\n    \"end_time\": 900,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 720,\n      \"end_time\": 750\n    },\n    {\n      \"start_time\": 750,\n      \"end_time\": 780\n    },\n    {\n      \"start_time\": 780,\n      \"end_time\": 810\n    },\n    {\n      \"start_time\": 810,\n      \"end_time\": 840\n    },\n    {\n      \"start_time\": 840,\n      \"end_time\": 870\n    },\n    {\n      \"start_time\": 870,\n      \"end_time\": 900\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M1801 window=720-750 component=recommendationservice signal=latency.p90 value=0.0107052 unit=s dev=+23.1 n=30\",\n    \"[metrics] id=M1802 window=720-750 component=cartservice signal=latency.p90 value=0.00670187 unit=s dev=+18.2 n=30\",\n    \"[metrics] id=M1803 window=720-750 component=frontend signal=latency.p90 value=0.414542 unit=s dev=+16.2 n=30\",\n    \"[metrics] id=M1876 window=750-780 component=recommendationservice signal=latency.p90 value=0.020146 unit=s dev=+215.6 n=30\",\n    \"[metrics] id=M1877 window=750-780 component=cartservice signal=latency.p90 value=0.0155537 unit=s dev=+102.6 n=30\",\n    \"[metrics] id=M1878 window=750-780 component=frontend signal=latency.p90 value=1.4223 unit=s dev=+93.9 n=30\",\n    \"[metrics] id=M1951 window=780-810 component=currencyservice signal=latency.p50 value=0.0584589 unit=s dev=+336.0 n=30\",\n    \"[metrics] id=M1952 window=780-810 component=recommendationservice signal=latency.p90 value=0.0237631 unit=s dev=+289.3 n=30\",\n    \"[metrics] id=M1953 window=780-810 component=frontend signal=latency.p90 value=3.5305 unit=s dev=+256.3 n=30\",\n    \"[metrics] id=M2026 window=810-840 component=currencyservice signal=latency.p50 value=0.0845756 unit=s dev=+497.6 n=30\",\n    \"[metrics] id=M2027 window=810-840 component=recommendationservice signal=latency.p90 value=0.0225218 unit=s dev=+264.0 n=30\",\n    \"[metrics] id=M2028 window=810-840 component=frontend signal=latency.p90 value=3.0037 unit=s dev=+215.7 n=30\",\n    \"[metrics] id=M2101 window=840-870 component=currencyservice signal=latency.p50 value=0.0549058 unit=s dev=+314.0 n=30\",\n    \"[metrics] id=M2102 window=840-870 component=recommendationservice signal=latency.p90 value=0.0195621 unit=s dev=+203.7 n=30\",\n    \"[metrics] id=M2103 window=840-870 component=frontend signal=latency.p90 value=2.1837 unit=s dev=+152.5 n=30\",\n    \"[metrics] id=M2176 window=870-900 component=currencyservice signal=latency.p50 value=0.0685176 unit=s dev=+398.2 n=30\",\n    \"[metrics] id=M2177 window=870-900 component=recommendationservice signal=latency.p90 value=0.024715 unit=s dev=+308.7 n=30\",\n    \"[metrics] id=M2178 window=870-900 component=frontend signal=latency.p90 value=2.3136 unit=s dev=+162.5 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 720,\n          \"end_time\": 900,\n          \"components\": []\n        },\n        \"reasoning\": \"Continuing metrics-first full time scan for the next 180-second chunk (720-900) to cover the full telemetry range.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 720,\\n    \\\"end_time\\\": 900,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 720,\\n      \\\"end_time\\\": 750\\n    },\\n    {\\n      \\\"start_time\\\": 750,\\n      \\\"end_time\\\": 780\\n    },\\n    {\\n      \\\"start_time\\\": 780,\\n      \\\"end_time\\\": 810\\n    },\\n    {\\n      \\\"start_time\\\": 810,\\n      \\\"end_time\\\": 840\\n    },\\n    {\\n      \\\"start_time\\\": 840,\\n      \\\"end_time\\\": 870\\n    },\\n    {\\n      \\\"start_time\\\": 870,\\n      \\\"end_time\\\": 900\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M1801 window=720-750 component=recommendationservice signal=latency.p90 value=0.0107052 unit=s dev=+23.1 n=30\\\",\\n    \\\"[metrics] id=M1802 window=720-750 component=cartservice signal=latency.p90 value=0.00670187 unit=s dev=+18.2 n=30\\\",\\n    \\\"[metrics] id=M1803 window=720-750 component=frontend signal=latency.p90 value=0.414542 unit=s dev=+16.2 n=30\\\",\\n    \\\"[metrics] id=M1876 window=750-780 component=recommendationservice signal=latency.p90 value=0.020146 unit=s dev=+215.6 n=30\\\",\\n    \\\"[metrics] id=M1877 window=750-780 component=cartservice signal=latency.p90 value=0.0155537 unit=s dev=+102.6 n=30\\\",\\n    \\\"[metrics] id=M1878 window=750-780 component=frontend signal=latency.p90 value=1.4223 unit=s dev=+93.9 n=30\\\",\\n    \\\"[metrics] id=M1951 window=780-810 component=currencyservice signal=latency.p50 value=0.0584589 unit=s dev=+336.0 n=30\\\",\\n    \\\"[metrics] id=M1952 window=780-810 component=recommendationservice signal=latency.p90 value=0.0237631 unit=s dev=+289.3 n=30\\\",\\n    \\\"[metrics] id=M1953 window=780-810 component=frontend signal=latency.p90 value=3.5305 unit=s dev=+256.3 n=30\\\",\\n    \\\"[metrics] id=M2026 window=810-840 component=currencyservice signal=latency.p50 value=0.0845756 unit=s dev=+497.6 n=30\\\",\\n    \\\"[metrics] id=M2027 window=810-840 component=recommendationservice signal=latency.p90 value=0.0225218 unit=s dev=+264.0 n=30\\\",\\n    \\\"[metrics] id=M2028 window=810-840 component=frontend signal=latency.p90 value=3.0037 unit=s dev=+215.7 n=30\\\",\\n    \\\"[metrics] id=M2101 window=840-870 component=currencyservice signal=latency.p50 value=0.0549058 unit=s dev=+314.0 n=30\\\",\\n    \\\"[metrics] id=M2102 window=840-870 component=recommendationservice signal=latency.p90 value=0.0195621 unit=s dev=+203.7 n=30\\\",\\n    \\\"[metrics] id=M2103 window=840-870 component=frontend signal=latency.p90 value=2.1837 unit=s dev=+152.5 n=30\\\",\\n    \\\"[metrics] id=M2176 window=870-900 component=currencyservice signal=latency.p50 value=0.0685176 unit=s dev=+398.2 n=30\\\",\\n    \\\"[metrics] id=M2177 window=870-900 component=recommendationservice signal=latency.p90 value=0.024715 unit=s dev=+308.7 n=30\\\",\\n    \\\"[metrics] id=M2178 window=870-900 component=frontend signal=latency.p90 value=2.3136 unit=s dev=+162.5 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 720-900s metrics. Frontend latency.p90 dev=+16.2 to +256.3; currencyservice latency.p50 dev=+314 to +497.6; recommendationservice latency.p90 dev=+203 to +308.7. No component-local CPU/mem/diskio/socket anomalies. Root cause is latency propagation from upstream.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30",
+            "M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30",
+            "M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30",
+            "M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30",
+            "M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30",
+            "M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30",
+            "M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30",
+            "M1801 window=720-750 component=recommendationservice signal=latency.p90 value=0.0107052 unit=s dev=+23.1 n=30",
+            "M1951 window=780-810 component=currencyservice signal=latency.p50 value=0.0584589 unit=s dev=+336.0 n=30",
+            "M2026 window=810-840 component=currencyservice signal=latency.p50 value=0.0845756 unit=s dev=+497.6 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "frontend",
+              "reason": "latency"
+            },
+            {
+              "rank": 2,
+              "component": "currencyservice",
+              "reason": "latency"
+            },
+            {
+              "rank": 3,
+              "component": "recommendationservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.586,
+        "reasoner": 14.941,
+        "tool": 0.015,
+        "all": 18.542
+      }
+    },
+    {
+      "step": 6,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 900,
+              "end_time": 1080,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (900-1080) to cover the full telemetry range."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 900,
+              "end_time": 1080,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (900-1080) to cover the full telemetry range."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 900,\n    \"end_time\": 1080,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 900,\n      \"end_time\": 930\n    },\n    {\n      \"start_time\": 930,\n      \"end_time\": 960\n    },\n    {\n      \"start_time\": 960,\n      \"end_time\": 990\n    },\n    {\n      \"start_time\": 990,\n      \"end_time\": 1020\n    },\n    {\n      \"start_time\": 1020,\n      \"end_time\": 1050\n    },\n    {\n      \"start_time\": 1050,\n      \"end_time\": 1080\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M2251 window=900-930 component=recommendationservice signal=latency.p90 value=0.0526234 unit=s dev=+877.7 n=30\",\n    \"[metrics] id=M2252 window=900-930 component=currencyservice signal=latency.p50 value=0.0536541 unit=s dev=+306.3 n=30\",\n    \"[metrics] id=M2253 window=900-930 component=frontend signal=latency.p90 value=2.6465 unit=s dev=+188.2 n=30\",\n    \"[metrics] id=M2326 window=930-960 component=recommendationservice signal=latency.p90 value=0.0224727 unit=s dev=+263.0 n=30\",\n    \"[metrics] id=M2327 window=930-960 component=currencyservice signal=latency.p50 value=0.0395583 unit=s dev=+219.1 n=30\",\n    \"[metrics] id=M2328 window=930-960 component=checkoutservice signal=latency.p90 value=2.6203 unit=s dev=+197.6 n=30\",\n    \"[metrics] id=M2401 window=960-990 component=checkoutservice signal=latency.p90 value=4.9292 unit=s dev=+387.8 n=30\",\n    \"[metrics] id=M2402 window=960-990 component=recommendationservice signal=latency.p90 value=0.0231685 unit=s dev=+277.2 n=30\",\n    \"[metrics] id=M2403 window=960-990 component=currencyservice signal=latency.p50 value=0.0331374 unit=s dev=+179.4 n=30\",\n    \"[metrics] id=M2476 window=990-1020 component=checkoutservice signal=latency.p90 value=3.7514 unit=s dev=+290.8 n=30\",\n    \"[metrics] id=M2477 window=990-1020 component=recommendationservice signal=latency.p90 value=0.02377 unit=s dev=+289.5 n=30\",\n    \"[metrics] id=M2478 window=990-1020 component=frontend signal=latency.p90 value=3.685 unit=s dev=+268.2 n=30\",\n    \"[metrics] id=M2551 window=1020-1050 component=recommendationservice signal=latency.p90 value=0.113121 unit=s dev=+2111.2 n=30\",\n    \"[metrics] id=M2552 window=1020-1050 component=currencyservice signal=latency.p50 value=0.127934 unit=s dev=+765.8 n=30\",\n    \"[metrics] id=M2553 window=1020-1050 component=frontend signal=latency.p90 value=7.1785 unit=s dev=+537.3 n=30\",\n    \"[metrics] id=M2626 window=1050-1080 component=recommendationservice signal=latency.p90 value=0.17808 unit=s dev=+3435.6 n=30\",\n    \"[metrics] id=M2627 window=1050-1080 component=frontend signal=latency.p90 value=6.4107 unit=s dev=+478.2 n=30\",\n    \"[metrics] id=M2628 window=1050-1080 component=currencyservice signal=latency.p50 value=0.0795424 unit=s dev=+466.4 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 900,\n          \"end_time\": 1080,\n          \"components\": []\n        },\n        \"reasoning\": \"Continuing metrics-first full time scan for the next 180-second chunk (900-1080) to cover the full telemetry range.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 900,\\n    \\\"end_time\\\": 1080,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 900,\\n      \\\"end_time\\\": 930\\n    },\\n    {\\n      \\\"start_time\\\": 930,\\n      \\\"end_time\\\": 960\\n    },\\n    {\\n      \\\"start_time\\\": 960,\\n      \\\"end_time\\\": 990\\n    },\\n    {\\n      \\\"start_time\\\": 990,\\n      \\\"end_time\\\": 1020\\n    },\\n    {\\n      \\\"start_time\\\": 1020,\\n      \\\"end_time\\\": 1050\\n    },\\n    {\\n      \\\"start_time\\\": 1050,\\n      \\\"end_time\\\": 1080\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M2251 window=900-930 component=recommendationservice signal=latency.p90 value=0.0526234 unit=s dev=+877.7 n=30\\\",\\n    \\\"[metrics] id=M2252 window=900-930 component=currencyservice signal=latency.p50 value=0.0536541 unit=s dev=+306.3 n=30\\\",\\n    \\\"[metrics] id=M2253 window=900-930 component=frontend signal=latency.p90 value=2.6465 unit=s dev=+188.2 n=30\\\",\\n    \\\"[metrics] id=M2326 window=930-960 component=recommendationservice signal=latency.p90 value=0.0224727 unit=s dev=+263.0 n=30\\\",\\n    \\\"[metrics] id=M2327 window=930-960 component=currencyservice signal=latency.p50 value=0.0395583 unit=s dev=+219.1 n=30\\\",\\n    \\\"[metrics] id=M2328 window=930-960 component=checkoutservice signal=latency.p90 value=2.6203 unit=s dev=+197.6 n=30\\\",\\n    \\\"[metrics] id=M2401 window=960-990 component=checkoutservice signal=latency.p90 value=4.9292 unit=s dev=+387.8 n=30\\\",\\n    \\\"[metrics] id=M2402 window=960-990 component=recommendationservice signal=latency.p90 value=0.0231685 unit=s dev=+277.2 n=30\\\",\\n    \\\"[metrics] id=M2403 window=960-990 component=currencyservice signal=latency.p50 value=0.0331374 unit=s dev=+179.4 n=30\\\",\\n    \\\"[metrics] id=M2476 window=990-1020 component=checkoutservice signal=latency.p90 value=3.7514 unit=s dev=+290.8 n=30\\\",\\n    \\\"[metrics] id=M2477 window=990-1020 component=recommendationservice signal=latency.p90 value=0.02377 unit=s dev=+289.5 n=30\\\",\\n    \\\"[metrics] id=M2478 window=990-1020 component=frontend signal=latency.p90 value=3.685 unit=s dev=+268.2 n=30\\\",\\n    \\\"[metrics] id=M2551 window=1020-1050 component=recommendationservice signal=latency.p90 value=0.113121 unit=s dev=+2111.2 n=30\\\",\\n    \\\"[metrics] id=M2552 window=1020-1050 component=currencyservice signal=latency.p50 value=0.127934 unit=s dev=+765.8 n=30\\\",\\n    \\\"[metrics] id=M2553 window=1020-1050 component=frontend signal=latency.p90 value=7.1785 unit=s dev=+537.3 n=30\\\",\\n    \\\"[metrics] id=M2626 window=1050-1080 component=recommendationservice signal=latency.p90 value=0.17808 unit=s dev=+3435.6 n=30\\\",\\n    \\\"[metrics] id=M2627 window=1050-1080 component=frontend signal=latency.p90 value=6.4107 unit=s dev=+478.2 n=30\\\",\\n    \\\"[metrics] id=M2628 window=1050-1080 component=currencyservice signal=latency.p50 value=0.0795424 unit=s dev=+466.4 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 900-1080s metrics. Recommendationservice latency.p90 dev=+877 to +3435; currencyservice latency.p50 dev=+179 to +765; frontend/checkoutservice latency.p90 dev=+188 to +537. No CPU/mem/diskio/socket anomalies. Root cause is latency propagation from upstream.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30",
+            "M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30",
+            "M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30",
+            "M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30",
+            "M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30",
+            "M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30",
+            "M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30",
+            "M1801 window=720-750 component=recommendationservice signal=latency.p90 value=0.0107052 unit=s dev=+23.1 n=30",
+            "M1951 window=780-810 component=currencyservice signal=latency.p50 value=0.0584589 unit=s dev=+336.0 n=30",
+            "M2026 window=810-840 component=currencyservice signal=latency.p50 value=0.0845756 unit=s dev=+497.6 n=30",
+            "M2251 window=900-930 component=recommendationservice signal=latency.p90 value=0.0526234 unit=s dev=+877.7 n=30",
+            "M2551 window=1020-1050 component=recommendationservice signal=latency.p90 value=0.113121 unit=s dev=+2111.2 n=30",
+            "M2626 window=1050-1080 component=recommendationservice signal=latency.p90 value=0.17808 unit=s dev=+3435.6 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "recommendationservice",
+              "reason": "latency"
+            },
+            {
+              "rank": 2,
+              "component": "currencyservice",
+              "reason": "latency"
+            },
+            {
+              "rank": 3,
+              "component": "frontend",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.776,
+        "reasoner": 15.062,
+        "tool": 0.015,
+        "all": 18.853
+      }
+    },
+    {
+      "step": 7,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 1080,
+              "end_time": 1260,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (1080-1260) to cover the full telemetry range."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 1080,
+              "end_time": 1260,
+              "components": []
+            },
+            "reasoning": "Continuing metrics-first full time scan for the next 180-second chunk (1080-1260) to cover the full telemetry range."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 1080,\n    \"end_time\": 1260,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 1080,\n      \"end_time\": 1110\n    },\n    {\n      \"start_time\": 1110,\n      \"end_time\": 1140\n    },\n    {\n      \"start_time\": 1140,\n      \"end_time\": 1170\n    },\n    {\n      \"start_time\": 1170,\n      \"end_time\": 1200\n    },\n    {\n      \"start_time\": 1200,\n      \"end_time\": 1230\n    },\n    {\n      \"start_time\": 1230,\n      \"end_time\": 1260\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M2701 window=1080-1110 component=recommendationservice signal=latency.p90 value=0.10028 unit=s dev=+1849.4 n=30\",\n    \"[metrics] id=M2702 window=1080-1110 component=frontend signal=latency.p90 value=19.03 unit=s dev=+1450.5 n=30\",\n    \"[metrics] id=M2703 window=1080-1110 component=currencyservice signal=latency.p50 value=0.152477 unit=s dev=+917.6 n=30\",\n    \"[metrics] id=M2776 window=1110-1140 component=currencyservice signal=latency.p50 value=0.124059 unit=s dev=+741.8 n=30\",\n    \"[metrics] id=M2777 window=1110-1140 component=frontend signal=latency.p90 value=7.3613 unit=s dev=+551.4 n=30\",\n    \"[metrics] id=M2778 window=1110-1140 component=recommendationservice signal=latency.p90 value=0.0328298 unit=s dev=+474.2 n=30\",\n    \"[metrics] id=M2851 window=1140-1170 component=recommendationservice signal=latency.p90 value=0.0364788 unit=s dev=+548.6 n=30\",\n    \"[metrics] id=M2852 window=1140-1170 component=frontend signal=latency.p90 value=3.3804 unit=s dev=+244.7 n=30\",\n    \"[metrics] id=M2853 window=1140-1170 component=currencyservice signal=latency.p50 value=0.0337606 unit=s dev=+183.2 n=30\",\n    \"[metrics] id=M2926 window=1170-1200 component=recommendationservice signal=latency.p90 value=0.0611012 unit=s dev=+1050.6 n=18\",\n    \"[metrics] id=M2927 window=1170-1200 component=frontend signal=latency.p90 value=7.2277 unit=s dev=+541.1 n=17\",\n    \"[metrics] id=M2928 window=1170-1200 component=currencyservice signal=latency.p50 value=0.0413453 unit=s dev=+230.1 n=30\",\n    \"[metrics] id=M3001 window=1200-1230 component=frontend signal=latency.p90 value=44.53 unit=s dev=+3414.7 n=30\",\n    \"[metrics] id=M3002 window=1200-1230 component=recommendationservice signal=latency.p90 value=0.113318 unit=s dev=+2115.2 n=30\",\n    \"[metrics] id=M3003 window=1200-1230 component=currencyservice signal=latency.p50 value=0.0674081 unit=s dev=+391.4 n=30\",\n    \"[metrics] id=M3076 window=1230-1260 component=recommendationservice signal=latency.p90 value=0.0390563 unit=s dev=+601.1 n=30\",\n    \"[metrics] id=M3077 window=1230-1260 component=frontend signal=latency.p90 value=5.4533 unit=s dev=+404.4 n=30\",\n    \"[metrics] id=M3078 window=1230-1260 component=currencyservice signal=latency.p50 value=0.0479762 unit=s dev=+271.2 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 1080,\n          \"end_time\": 1260,\n          \"components\": []\n        },\n        \"reasoning\": \"Continuing metrics-first full time scan for the next 180-second chunk (1080-1260) to cover the full telemetry range.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 1080,\\n    \\\"end_time\\\": 1260,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 1080,\\n      \\\"end_time\\\": 1110\\n    },\\n    {\\n      \\\"start_time\\\": 1110,\\n      \\\"end_time\\\": 1140\\n    },\\n    {\\n      \\\"start_time\\\": 1140,\\n      \\\"end_time\\\": 1170\\n    },\\n    {\\n      \\\"start_time\\\": 1170,\\n      \\\"end_time\\\": 1200\\n    },\\n    {\\n      \\\"start_time\\\": 1200,\\n      \\\"end_time\\\": 1230\\n    },\\n    {\\n      \\\"start_time\\\": 1230,\\n      \\\"end_time\\\": 1260\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M2701 window=1080-1110 component=recommendationservice signal=latency.p90 value=0.10028 unit=s dev=+1849.4 n=30\\\",\\n    \\\"[metrics] id=M2702 window=1080-1110 component=frontend signal=latency.p90 value=19.03 unit=s dev=+1450.5 n=30\\\",\\n    \\\"[metrics] id=M2703 window=1080-1110 component=currencyservice signal=latency.p50 value=0.152477 unit=s dev=+917.6 n=30\\\",\\n    \\\"[metrics] id=M2776 window=1110-1140 component=currencyservice signal=latency.p50 value=0.124059 unit=s dev=+741.8 n=30\\\",\\n    \\\"[metrics] id=M2777 window=1110-1140 component=frontend signal=latency.p90 value=7.3613 unit=s dev=+551.4 n=30\\\",\\n    \\\"[metrics] id=M2778 window=1110-1140 component=recommendationservice signal=latency.p90 value=0.0328298 unit=s dev=+474.2 n=30\\\",\\n    \\\"[metrics] id=M2851 window=1140-1170 component=recommendationservice signal=latency.p90 value=0.0364788 unit=s dev=+548.6 n=30\\\",\\n    \\\"[metrics] id=M2852 window=1140-1170 component=frontend signal=latency.p90 value=3.3804 unit=s dev=+244.7 n=30\\\",\\n    \\\"[metrics] id=M2853 window=1140-1170 component=currencyservice signal=latency.p50 value=0.0337606 unit=s dev=+183.2 n=30\\\",\\n    \\\"[metrics] id=M2926 window=1170-1200 component=recommendationservice signal=latency.p90 value=0.0611012 unit=s dev=+1050.6 n=18\\\",\\n    \\\"[metrics] id=M2927 window=1170-1200 component=frontend signal=latency.p90 value=7.2277 unit=s dev=+541.1 n=17\\\",\\n    \\\"[metrics] id=M2928 window=1170-1200 component=currencyservice signal=latency.p50 value=0.0413453 unit=s dev=+230.1 n=30\\\",\\n    \\\"[metrics] id=M3001 window=1200-1230 component=frontend signal=latency.p90 value=44.53 unit=s dev=+3414.7 n=30\\\",\\n    \\\"[metrics] id=M3002 window=1200-1230 component=recommendationservice signal=latency.p90 value=0.113318 unit=s dev=+2115.2 n=30\\\",\\n    \\\"[metrics] id=M3003 window=1200-1230 component=currencyservice signal=latency.p50 value=0.0674081 unit=s dev=+391.4 n=30\\\",\\n    \\\"[metrics] id=M3076 window=1230-1260 component=recommendationservice signal=latency.p90 value=0.0390563 unit=s dev=+601.1 n=30\\\",\\n    \\\"[metrics] id=M3077 window=1230-1260 component=frontend signal=latency.p90 value=5.4533 unit=s dev=+404.4 n=30\\\",\\n    \\\"[metrics] id=M3078 window=1230-1260 component=currencyservice signal=latency.p50 value=0.0479762 unit=s dev=+271.2 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 1080-1260s metrics. Frontend latency.p90 dev=+1450 to +3414; recommendationservice latency.p90 dev=+1849 to +2115; currencyservice latency.p50 dev=+183 to +917. No CPU/mem/diskio/socket anomalies. Root cause is latency propagation from upstream.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30",
+            "M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30",
+            "M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30",
+            "M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30",
+            "M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30",
+            "M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30",
+            "M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30",
+            "M1801 window=720-750 component=recommendationservice signal=latency.p90 value=0.0107052 unit=s dev=+23.1 n=30",
+            "M1951 window=780-810 component=currencyservice signal=latency.p50 value=0.0584589 unit=s dev=+336.0 n=30",
+            "M2026 window=810-840 component=currencyservice signal=latency.p50 value=0.0845756 unit=s dev=+497.6 n=30",
+            "M2251 window=900-930 component=recommendationservice signal=latency.p90 value=0.0526234 unit=s dev=+877.7 n=30",
+            "M2551 window=1020-1050 component=recommendationservice signal=latency.p90 value=0.113121 unit=s dev=+2111.2 n=30",
+            "M2626 window=1050-1080 component=recommendationservice signal=latency.p90 value=0.17808 unit=s dev=+3435.6 n=30",
+            "M2701 window=1080-1110 component=recommendationservice signal=latency.p90 value=0.10028 unit=s dev=+1849.4 n=30",
+            "M3001 window=1200-1230 component=frontend signal=latency.p90 value=44.53 unit=s dev=+3414.7 n=30",
+            "M3002 window=1200-1230 component=recommendationservice signal=latency.p90 value=0.113318 unit=s dev=+2115.2 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "frontend",
+              "reason": "latency"
+            },
+            {
+              "rank": 2,
+              "component": "recommendationservice",
+              "reason": "latency"
+            },
+            {
+              "rank": 3,
+              "component": "currencyservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.968,
+        "reasoner": 14.988,
+        "tool": 0.014,
+        "all": 18.97
+      }
+    },
+    {
+      "step": 8,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 1080,
+              "end_time": 1260,
+              "components": [
+                "recommendationservice"
+              ]
+            },
+            "reasoning": "Validating top candidate recommendationservice latency anomaly with trace evidence in the suspicious window."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 1080,
+              "end_time": 1260,
+              "components": [
+                "recommendationservice"
+              ]
+            },
+            "reasoning": "Validating top candidate recommendationservice latency anomaly with trace evidence in the suspicious window."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 1080,\n    \"end_time\": 1260,\n    \"components\": [\n      \"recommendationservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 48,\n  \"matched_count\": 1126,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 1080,\n      \"end_time\": 1110\n    },\n    {\n      \"start_time\": 1110,\n      \"end_time\": 1140\n    },\n    {\n      \"start_time\": 1140,\n      \"end_time\": 1170\n    },\n    {\n      \"start_time\": 1170,\n      \"end_time\": 1200\n    },\n    {\n      \"start_time\": 1200,\n      \"end_time\": 1230\n    },\n    {\n      \"start_time\": 1230,\n      \"end_time\": 1260\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M2701 window=1080-1110 component=recommendationservice signal=latency.p90 value=0.10028 unit=s dev=+1849.4 n=30\",\n    \"[metrics] id=M2708 window=1080-1110 component=recommendationservice signal=latency.p50 value=0.00943234 unit=s dev=+56.0 n=30\",\n    \"[metrics] id=M2721 window=1080-1110 component=recommendationservice signal=cpu value=1.339 unit=percent dev=-5.6 n=30\",\n    \"[traces] id=T4185 window=1080-1110 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=70021.4 unit=us dev=+44.0 n=215\",\n    \"[traces] id=T4186 window=1080-1110 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=70013.8 unit=us dev=+43.9 n=215\",\n    \"[traces] id=T4187 window=1080-1110 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=70443.5 unit=us dev=+43.6 n=215\",\n    \"[logs] id=L15606 window=1080-1110 component=recommendationservice template_id=3888 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['1YMWWN1N4O', '6E92ZMYYFZ', '9SIQT8TOJO', '66VCHSJNUP', '0PUK6V6EV0']\\\"\",\n    \"[logs] id=L15607 window=1080-1110 component=recommendationservice template_id=7562 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['9SIQT8TOJO', '66VCHSJNUP']\\\"\",\n    \"[logs] id=L15608 window=1080-1110 component=recommendationservice template_id=7802 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['9SIQT8TOJO', 'LS4PSXUNUM', '1YMWWN1N4O', '66VCHSJNUP', '0PUK6V6EV0']\\\"\",\n    \"[metrics] id=M2778 window=1110-1140 component=recommendationservice signal=latency.p90 value=0.0328298 unit=s dev=+474.2 n=30\",\n    \"[metrics] id=M2783 window=1110-1140 component=recommendationservice signal=latency.p50 value=0.00888552 unit=s dev=+40.3 n=30\",\n    \"[metrics] id=M2796 window=1110-1140 component=recommendationservice signal=mem value=46869162.7 unit=bytes dev=+5.1 n=30\",\n    \"[traces] id=T4299 window=1110-1140 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=88034 unit=us dev=+56.3 n=162\",\n    \"[traces] id=T4300 window=1110-1140 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=88026.6 unit=us dev=+56.2 n=162\",\n    \"[traces] id=T4301 window=1110-1140 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=88467.4 unit=us dev=+55.9 n=162\",\n    \"[logs] id=L16016 window=1110-1140 component=recommendationservice template_id=8937 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['LS4PSXUNUM', '0PUK6V6EV0', '1YMWWN1N4O', '9SIQT8TOJO', '2ZYFJ3GM2N']\\\"\",\n    \"[logs] id=L16088 window=1110-1140 component=recommendationservice template_id=10296 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '66VCHSJNUP', 'L9ECAV7KIM', '2ZYFJ3GM2N', 'LS4PSXUNUM']\\\"\",\n    \"[logs] id=L16089 window=1110-1140 component=recommendationservice template_id=10370 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '6E92ZMYYFZ', '2ZYFJ3GM2N', 'LS4PSXUNUM', 'L9ECAV7KIM']\\\"\",\n    \"[metrics] id=M2851 window=1140-1170 component=recommendationservice signal=latency.p90 value=0.0364788 unit=s dev=+548.6 n=30\",\n    \"[metrics] id=M2858 window=1140-1170 component=recommendationservice signal=latency.p50 value=0.008877 unit=s dev=+40.1 n=30\",\n    \"[metrics] id=M2862 window=1140-1170 component=recommendationservice signal=workload value=3.9577 unit=rps dev=-14.4 n=30\",\n    \"[metrics] id=M2926 window=1170-1200 component=recommendationservice signal=latency.p90 value=0.0611012 unit=s dev=+1050.6 n=18\",\n    \"[metrics] id=M2934 window=1170-1200 component=recommendationservice signal=latency.p50 value=0.00905929 unit=s dev=+45.3 n=18\",\n    \"[metrics] id=M2939 window=1170-1200 component=recommendationservice signal=workload value=1.7333 unit=rps dev=-16.5 n=30\",\n    \"[traces] id=T4411 window=1170-1200 edge=frontend>recommendationservice op=ListRecommendations signal=latency.self_p99 value=21020.1 unit=us dev=+268.3 n=157\",\n    \"[traces] id=T4416 window=1170-1200 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=88053.7 unit=us dev=+56.3 n=157\",\n    \"[traces] id=T4417 window=1170-1200 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=88043 unit=us dev=+56.2 n=157\",\n    \"[logs] id=L16332 window=1170-1200 component=recommendationservice template_id=2964 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['0PUK6V6EV0', '6E92ZMYYFZ', '66VCHSJNUP', '2ZYFJ3GM2N', '9SIQT8TOJO']\\\"\",\n    \"[logs] id=L16333 window=1170-1200 component=recommendationservice template_id=5844 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['66VCHSJNUP', '9SIQT8TOJO']\\\"\",\n    \"[logs] id=L16334 window=1170-1200 component=recommendationservice template_id=8129 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['L9ECAV7KIM', '1YMWWN1N4O', '0PUK6V6EV0', '6E92ZMYYFZ', '2ZYFJ3GM2N']\\\"\",\n    \"[metrics] id=M3002 window=1200-1230 component=recommendationservice signal=latency.p90 value=0.113318 unit=s dev=+2115.2 n=30\",\n    \"[metrics] id=M3008 window=1200-1230 component=recommendationservice signal=latency.p50 value=0.0096246 unit=s dev=+61.5 n=30\",\n    \"[metrics] id=M3024 window=1200-1230 component=recommendationservice signal=cpu value=1.4457 unit=percent dev=-5.2 n=30\",\n    \"[traces] id=T4531 window=1200-1230 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=70778.3 unit=us dev=+43.8 n=247\",\n    \"[traces] id=T4532 window=1200-1230 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=69176.4 unit=us dev=+43.4 n=247\",\n    \"[traces] id=T4533 window=1200-1230 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=69163.6 unit=us dev=+43.4 n=247\",\n    \"[logs] id=L16604 window=1200-1230 component=recommendationservice template_id=8023 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['L9ECAV7KIM', '0PUK6V6EV0', '1YMWWN1N4O', 'LS4PSXUNUM', '6E92ZMYYFZ']\\\"\",\n    \"[logs] id=L16680 window=1200-1230 component=recommendationservice template_id=10006 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '1YMWWN1N4O', '2ZYFJ3GM2N', '6E92ZMYYFZ', '9SIQT8TOJO']\\\"\",\n    \"[logs] id=L16681 window=1200-1230 component=recommendationservice template_id=10049 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '1YMWWN1N4O', '9SIQT8TOJO', '2ZYFJ3GM2N', 'L9ECAV7KIM']\\\"\",\n    \"[metrics] id=M3076 window=1230-1260 component=recommendationservice signal=latency.p90 value=0.0390563 unit=s dev=+601.1 n=30\",\n    \"[metrics] id=M3083 window=1230-1260 component=recommendationservice signal=latency.p50 value=0.00856479 unit=s dev=+31.2 n=30\",\n    \"[metrics] id=M3100 window=1230-1260 component=recommendationservice signal=workload value=16.33 unit=rps dev=-2.4 n=30\",\n    \"[traces] id=T4645 window=1230-1260 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=89770.7 unit=us dev=+57.5 n=254\",\n    \"[traces] id=T4646 window=1230-1260 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=89763.8 unit=us dev=+57.4 n=254\",\n    \"[traces] id=T4647 window=1230-1260 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=90667.1 unit=us dev=+57.4 n=254\",\n    \"[logs] id=L16999 window=1230-1260 component=recommendationservice template_id=10331 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '6E92ZMYYFZ', '0PUK6V6EV0', '66VCHSJNUP', 'L9ECAV7KIM']\\\"\",\n    \"[logs] id=L17106 window=1230-1260 component=recommendationservice template_id=10090 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '1YMWWN1N4O', 'LS4PSXUNUM', 'L9ECAV7KIM', '66VCHSJNUP']\\\"\",\n    \"[logs] id=L17107 window=1230-1260 component=recommendationservice template_id=10221 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '66VCHSJNUP', '0PUK6V6EV0', 'LS4PSXUNUM', '2ZYFJ3GM2N']\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 1080,\n          \"end_time\": 1260,\n          \"components\": [\n            \"recommendationservice\"\n          ]\n        },\n        \"reasoning\": \"Validating top candidate recommendationservice latency anomaly with trace evidence in the suspicious window.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 1080,\\n    \\\"end_time\\\": 1260,\\n    \\\"components\\\": [\\n      \\\"recommendationservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 48,\\n  \\\"matched_count\\\": 1126,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 1080,\\n      \\\"end_time\\\": 1110\\n    },\\n    {\\n      \\\"start_time\\\": 1110,\\n      \\\"end_time\\\": 1140\\n    },\\n    {\\n      \\\"start_time\\\": 1140,\\n      \\\"end_time\\\": 1170\\n    },\\n    {\\n      \\\"start_time\\\": 1170,\\n      \\\"end_time\\\": 1200\\n    },\\n    {\\n      \\\"start_time\\\": 1200,\\n      \\\"end_time\\\": 1230\\n    },\\n    {\\n      \\\"start_time\\\": 1230,\\n      \\\"end_time\\\": 1260\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M2701 window=1080-1110 component=recommendationservice signal=latency.p90 value=0.10028 unit=s dev=+1849.4 n=30\\\",\\n    \\\"[metrics] id=M2708 window=1080-1110 component=recommendationservice signal=latency.p50 value=0.00943234 unit=s dev=+56.0 n=30\\\",\\n    \\\"[metrics] id=M2721 window=1080-1110 component=recommendationservice signal=cpu value=1.339 unit=percent dev=-5.6 n=30\\\",\\n    \\\"[traces] id=T4185 window=1080-1110 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=70021.4 unit=us dev=+44.0 n=215\\\",\\n    \\\"[traces] id=T4186 window=1080-1110 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=70013.8 unit=us dev=+43.9 n=215\\\",\\n    \\\"[traces] id=T4187 window=1080-1110 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=70443.5 unit=us dev=+43.6 n=215\\\",\\n    \\\"[logs] id=L15606 window=1080-1110 component=recommendationservice template_id=3888 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['1YMWWN1N4O', '6E92ZMYYFZ', '9SIQT8TOJO', '66VCHSJNUP', '0PUK6V6EV0']\\\\\\\"\\\",\\n    \\\"[logs] id=L15607 window=1080-1110 component=recommendationservice template_id=7562 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['9SIQT8TOJO', '66VCHSJNUP']\\\\\\\"\\\",\\n    \\\"[logs] id=L15608 window=1080-1110 component=recommendationservice template_id=7802 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['9SIQT8TOJO', 'LS4PSXUNUM', '1YMWWN1N4O', '66VCHSJNUP', '0PUK6V6EV0']\\\\\\\"\\\",\\n    \\\"[metrics] id=M2778 window=1110-1140 component=recommendationservice signal=latency.p90 value=0.0328298 unit=s dev=+474.2 n=30\\\",\\n    \\\"[metrics] id=M2783 window=1110-1140 component=recommendationservice signal=latency.p50 value=0.00888552 unit=s dev=+40.3 n=30\\\",\\n    \\\"[metrics] id=M2796 window=1110-1140 component=recommendationservice signal=mem value=46869162.7 unit=bytes dev=+5.1 n=30\\\",\\n    \\\"[traces] id=T4299 window=1110-1140 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=88034 unit=us dev=+56.3 n=162\\\",\\n    \\\"[traces] id=T4300 window=1110-1140 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=88026.6 unit=us dev=+56.2 n=162\\\",\\n    \\\"[traces] id=T4301 window=1110-1140 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=88467.4 unit=us dev=+55.9 n=162\\\",\\n    \\\"[logs] id=L16016 window=1110-1140 component=recommendationservice template_id=8937 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['LS4PSXUNUM', '0PUK6V6EV0', '1YMWWN1N4O', '9SIQT8TOJO', '2ZYFJ3GM2N']\\\\\\\"\\\",\\n    \\\"[logs] id=L16088 window=1110-1140 component=recommendationservice template_id=10296 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '66VCHSJNUP', 'L9ECAV7KIM', '2ZYFJ3GM2N', 'LS4PSXUNUM']\\\\\\\"\\\",\\n    \\\"[logs] id=L16089 window=1110-1140 component=recommendationservice template_id=10370 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '6E92ZMYYFZ', '2ZYFJ3GM2N', 'LS4PSXUNUM', 'L9ECAV7KIM']\\\\\\\"\\\",\\n    \\\"[metrics] id=M2851 window=1140-1170 component=recommendationservice signal=latency.p90 value=0.0364788 unit=s dev=+548.6 n=30\\\",\\n    \\\"[metrics] id=M2858 window=1140-1170 component=recommendationservice signal=latency.p50 value=0.008877 unit=s dev=+40.1 n=30\\\",\\n    \\\"[metrics] id=M2862 window=1140-1170 component=recommendationservice signal=workload value=3.9577 unit=rps dev=-14.4 n=30\\\",\\n    \\\"[metrics] id=M2926 window=1170-1200 component=recommendationservice signal=latency.p90 value=0.0611012 unit=s dev=+1050.6 n=18\\\",\\n    \\\"[metrics] id=M2934 window=1170-1200 component=recommendationservice signal=latency.p50 value=0.00905929 unit=s dev=+45.3 n=18\\\",\\n    \\\"[metrics] id=M2939 window=1170-1200 component=recommendationservice signal=workload value=1.7333 unit=rps dev=-16.5 n=30\\\",\\n    \\\"[traces] id=T4411 window=1170-1200 edge=frontend>recommendationservice op=ListRecommendations signal=latency.self_p99 value=21020.1 unit=us dev=+268.3 n=157\\\",\\n    \\\"[traces] id=T4416 window=1170-1200 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=88053.7 unit=us dev=+56.3 n=157\\\",\\n    \\\"[traces] id=T4417 window=1170-1200 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=88043 unit=us dev=+56.2 n=157\\\",\\n    \\\"[logs] id=L16332 window=1170-1200 component=recommendationservice template_id=2964 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['0PUK6V6EV0', '6E92ZMYYFZ', '66VCHSJNUP', '2ZYFJ3GM2N', '9SIQT8TOJO']\\\\\\\"\\\",\\n    \\\"[logs] id=L16333 window=1170-1200 component=recommendationservice template_id=5844 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['66VCHSJNUP', '9SIQT8TOJO']\\\\\\\"\\\",\\n    \\\"[logs] id=L16334 window=1170-1200 component=recommendationservice template_id=8129 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['L9ECAV7KIM', '1YMWWN1N4O', '0PUK6V6EV0', '6E92ZMYYFZ', '2ZYFJ3GM2N']\\\\\\\"\\\",\\n    \\\"[metrics] id=M3002 window=1200-1230 component=recommendationservice signal=latency.p90 value=0.113318 unit=s dev=+2115.2 n=30\\\",\\n    \\\"[metrics] id=M3008 window=1200-1230 component=recommendationservice signal=latency.p50 value=0.0096246 unit=s dev=+61.5 n=30\\\",\\n    \\\"[metrics] id=M3024 window=1200-1230 component=recommendationservice signal=cpu value=1.4457 unit=percent dev=-5.2 n=30\\\",\\n    \\\"[traces] id=T4531 window=1200-1230 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=70778.3 unit=us dev=+43.8 n=247\\\",\\n    \\\"[traces] id=T4532 window=1200-1230 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=69176.4 unit=us dev=+43.4 n=247\\\",\\n    \\\"[traces] id=T4533 window=1200-1230 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=69163.6 unit=us dev=+43.4 n=247\\\",\\n    \\\"[logs] id=L16604 window=1200-1230 component=recommendationservice template_id=8023 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['L9ECAV7KIM', '0PUK6V6EV0', '1YMWWN1N4O', 'LS4PSXUNUM', '6E92ZMYYFZ']\\\\\\\"\\\",\\n    \\\"[logs] id=L16680 window=1200-1230 component=recommendationservice template_id=10006 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '1YMWWN1N4O', '2ZYFJ3GM2N', '6E92ZMYYFZ', '9SIQT8TOJO']\\\\\\\"\\\",\\n    \\\"[logs] id=L16681 window=1200-1230 component=recommendationservice template_id=10049 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '1YMWWN1N4O', '9SIQT8TOJO', '2ZYFJ3GM2N', 'L9ECAV7KIM']\\\\\\\"\\\",\\n    \\\"[metrics] id=M3076 window=1230-1260 component=recommendationservice signal=latency.p90 value=0.0390563 unit=s dev=+601.1 n=30\\\",\\n    \\\"[metrics] id=M3083 window=1230-1260 component=recommendationservice signal=latency.p50 value=0.00856479 unit=s dev=+31.2 n=30\\\",\\n    \\\"[metrics] id=M3100 window=1230-1260 component=recommendationservice signal=workload value=16.33 unit=rps dev=-2.4 n=30\\\",\\n    \\\"[traces] id=T4645 window=1230-1260 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.p99 value=89770.7 unit=us dev=+57.5 n=254\\\",\\n    \\\"[traces] id=T4646 window=1230-1260 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=89763.8 unit=us dev=+57.4 n=254\\\",\\n    \\\"[traces] id=T4647 window=1230-1260 edge=frontend>recommendationservice op=ListRecommendations signal=latency.p99 value=90667.1 unit=us dev=+57.4 n=254\\\",\\n    \\\"[logs] id=L16999 window=1230-1260 component=recommendationservice template_id=10331 level=INFO signal=log.count value=2 unit=count dev=+2.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '6E92ZMYYFZ', '0PUK6V6EV0', '66VCHSJNUP', 'L9ECAV7KIM']\\\\\\\"\\\",\\n    \\\"[logs] id=L17106 window=1230-1260 component=recommendationservice template_id=10090 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '1YMWWN1N4O', 'LS4PSXUNUM', 'L9ECAV7KIM', '66VCHSJNUP']\\\\\\\"\\\",\\n    \\\"[logs] id=L17107 window=1230-1260 component=recommendationservice template_id=10221 level=INFO signal=log.count value=1 unit=count dev=+1.0 template=\\\\\\\"[Recv ListRecommendations] product_ids=['OLJCESPC7Z', '66VCHSJNUP', '0PUK6V6EV0', 'LS4PSXUNUM', '2ZYFJ3GM2N']\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 1080-1260s recommendationservice. Latency.p90 dev=+1849 to +2115 persists; CPU/mem normal. Traces show self_p99 ~70-90ms (dev=+43-+57), confirming internal latency spike. Root cause is recommendationservice latency.",
+        "state": {
+          "metrics": [
+            "M0152 window=60-90 component=checkoutservice signal=latency.p50 value=0.136367 unit=s dev=+1.6 n=30",
+            "M0451 window=180-210 component=redis signal=diskio value=17662.7 unit=bytes/s dev=+2.5 n=30",
+            "M0901 window=360-390 component=frontend signal=error value=0.0290333 unit=count dev=+2.9 n=30",
+            "M1051 window=420-450 component=adservice signal=diskio value=235146.6 unit=bytes/s dev=+3.3 n=30",
+            "M1126 window=450-480 component=redis signal=diskio value=15387.7 unit=bytes/s dev=+2.1 n=30",
+            "M1351 window=540-570 component=productcatalogservice signal=mem value=10946423.5 unit=bytes dev=+1.4 n=30",
+            "M1501 window=600-630 component=redis signal=mem value=3084014.9 unit=bytes dev=+2.3 n=30",
+            "M1651 window=660-690 component=currencyservice signal=latency.p90 value=0.0644944 unit=s dev=+2.1 n=30",
+            "M1801 window=720-750 component=recommendationservice signal=latency.p90 value=0.0107052 unit=s dev=+23.1 n=30",
+            "M1951 window=780-810 component=currencyservice signal=latency.p50 value=0.0584589 unit=s dev=+336.0 n=30",
+            "M2026 window=810-840 component=currencyservice signal=latency.p50 value=0.0845756 unit=s dev=+497.6 n=30",
+            "M2251 window=900-930 component=recommendationservice signal=latency.p90 value=0.0526234 unit=s dev=+877.7 n=30",
+            "M2551 window=1020-1050 component=recommendationservice signal=latency.p90 value=0.113121 unit=s dev=+2111.2 n=30",
+            "M2626 window=1050-1080 component=recommendationservice signal=latency.p90 value=0.17808 unit=s dev=+3435.6 n=30",
+            "M2701 window=1080-1110 component=recommendationservice signal=latency.p90 value=0.10028 unit=s dev=+1849.4 n=30",
+            "M3001 window=1200-1230 component=frontend signal=latency.p90 value=44.53 unit=s dev=+3414.7 n=30",
+            "M3002 window=1200-1230 component=recommendationservice signal=latency.p90 value=0.113318 unit=s dev=+2115.2 n=30",
+            "M2721 window=1080-1110 component=recommendationservice signal=cpu value=1.339 unit=percent dev=-5.6 n=30"
+          ],
+          "traces": [
+            "T4185 window=1080-1110 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=70013.8 unit=us dev=+43.9 n=215",
+            "T4300 window=1110-1140 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=88026.6 unit=us dev=+56.2 n=162",
+            "T4533 window=1200-1230 edge=recommendationservice>recommendationservice op=ListProducts signal=latency.self_p99 value=69163.6 unit=us dev=+43.4 n=247"
+          ],
+          "logs": [
+            "L15606 window=1080-1110 component=recommendationservice template_id=3888 level=INFO signal=log.count value=2 unit=count dev=+2.0",
+            "L16016 window=1110-1140 component=recommendationservice template_id=8937 level=INFO signal=log.count value=2 unit=count dev=+2.0",
+            "L16332 window=1170-1200 component=recommendationservice template_id=2964 level=INFO signal=log.count value=2 unit=count dev=+2.0"
+          ],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "recommendationservice",
+              "reason": "latency"
+            },
+            {
+              "rank": 2,
+              "component": "frontend",
+              "reason": "latency"
+            },
+            {
+              "rank": 3,
+              "component": "currencyservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 3.367,
+        "reasoner": 26.931,
+        "tool": 0.018,
+        "all": 30.316
+      }
+    },
+    {
+      "step": 9,
+      "controller": {
+        "completed": true
+      },
+      "observation": "Controller marked analysis complete.",
+      "reasoner": {
+        "analysis": "Final RCA confirms recommendationservice latency (dev=+1849 to +2115) as primary cause. Traces show self_p99 spikes (70-88ms) validating internal latency. Frontend and currencyservice show secondary latency effects.",
+        "final_ranking": [
+          {
+            "time": 1080,
+            "component": "recommendationservice",
+            "reason": "latency"
+          },
+          {
+            "time": 1200,
+            "component": "frontend",
+            "reason": "latency"
+          },
+          {
+            "time": 780,
+            "component": "currencyservice",
+            "reason": "latency"
+          }
+        ]
+      },
+      "timing_s": {
+        "controller": 3.632,
+        "reasoner": 7.523,
+        "tool": 0.0,
+        "all": 11.155
+      }
+    }
+  ],
+  "timing_s": {
+    "all": 149.273
+  }
+}

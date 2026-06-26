@@ -1,0 +1,346 @@
+{
+  "case": {
+    "case_name": "case_000005",
+    "case_dir": "Benchmarks/OnlineBoutique_evidence/cases/case_000005",
+    "time_context": "evidence",
+    "available_files": {
+      "metrics": "Benchmarks/OnlineBoutique_evidence/cases/case_000005/simple_metrics.csv"
+    },
+    "possible_root_cause_components": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_reasons": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "possible_root_cause_services": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_metrics": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "service_dependency_graph": {
+      "nodes": [
+        "loadgenerator",
+        "frontend",
+        "checkoutservice",
+        "adservice",
+        "recommendationservice",
+        "productcatalogservice",
+        "cartservice",
+        "redis",
+        "paymentservice",
+        "emailservice",
+        "shippingservice",
+        "currencyservice"
+      ],
+      "edges": [
+        {
+          "caller": "loadgenerator",
+          "callee": "frontend"
+        },
+        {
+          "caller": "frontend",
+          "callee": "checkoutservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "adservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "recommendationservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "recommendationservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "paymentservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "emailservice"
+        },
+        {
+          "caller": "cartservice",
+          "callee": "redis"
+        }
+      ],
+      "available": true
+    },
+    "prediction_format": "Return ranked root causes as objects with `time` as Unix seconds, `component` as a candidate root cause service, and `reason` as a candidate root cause metric.",
+    "dataset": "Online Boutique",
+    "telemetry_time_range": {
+      "unit": "unix_seconds",
+      "start_time": 0,
+      "end_time": 1440,
+      "sources": {
+        "metrics": {
+          "column": "time",
+          "unit": "unix_seconds",
+          "start_time": 0,
+          "end_time": 1440,
+          "row_count": 1441
+        }
+      }
+    },
+    "available_read_apis": [
+      "get_evidence"
+    ],
+    "evidence_time_unit": "relative_seconds_from_case_start"
+  },
+  "prediction": [
+    "paymentservice_cpu",
+    "checkoutservice_cpu",
+    "emailservice_latency"
+  ],
+  "final_ranking": [
+    {
+      "time": 150,
+      "component": "paymentservice",
+      "reason": "cpu"
+    },
+    {
+      "time": 120,
+      "component": "checkoutservice",
+      "reason": "cpu"
+    },
+    {
+      "time": 90,
+      "component": "emailservice",
+      "reason": "latency"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Start with a broad scan of metrics across the first 180 seconds to identify initial anomalies."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Start with a broad scan of metrics across the first 180 seconds to identify initial anomalies."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 180,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 450,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    },\n    {\n      \"start_time\": 30,\n      \"end_time\": 60\n    },\n    {\n      \"start_time\": 60,\n      \"end_time\": 90\n    },\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    },\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=productcatalogservice signal=mem value=10858222.9 unit=bytes dev=+1.8 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=shippingservice signal=mem value=8801757.9 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0003 window=0-30 component=cartservice signal=mem value=44473548.8 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0076 window=30-60 component=shippingservice signal=mem value=8799027.2 unit=bytes dev=-1.8 n=30\",\n    \"[metrics] id=M0077 window=30-60 component=paymentservice signal=mem value=44476689.1 unit=bytes dev=-1.5 n=30\",\n    \"[metrics] id=M0078 window=30-60 component=adservice signal=workload value=16.08 unit=rps dev=+1.4 n=30\",\n    \"[metrics] id=M0151 window=60-90 component=adservice signal=mem value=107143577.6 unit=bytes dev=-1.8 n=30\",\n    \"[metrics] id=M0152 window=60-90 component=currencyservice signal=mem value=44384256 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0153 window=60-90 component=shippingservice signal=mem value=8823193.6 unit=bytes dev=-1.4 n=30\",\n    \"[metrics] id=M0226 window=90-120 component=emailservice signal=latency.p50 value=0.00305806 unit=s dev=+1.6 n=30\",\n    \"[metrics] id=M0227 window=90-120 component=emailservice signal=latency.p90 value=0.0047045 unit=s dev=+1.6 n=30\",\n    \"[metrics] id=M0228 window=90-120 component=adservice signal=mem value=107183035.7 unit=bytes dev=-1.5 n=30\",\n    \"[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p90 value=0.00439611 unit=s dev=+1.5 n=30\",\n    \"[metrics] id=M0302 window=120-150 component=checkoutservice signal=workload value=1.2978 unit=rps dev=+1.4 n=30\",\n    \"[metrics] id=M0303 window=120-150 component=checkoutservice signal=cpu value=0.475878 unit=percent dev=+1.3 n=30\",\n    \"[metrics] id=M0376 window=150-180 component=paymentservice signal=cpu value=1.0185 unit=percent dev=+2.7 n=30\",\n    \"[metrics] id=M0377 window=150-180 component=checkoutservice signal=cpu value=0.520404 unit=percent dev=+1.8 n=30\",\n    \"[metrics] id=M0378 window=150-180 component=recommendationservice signal=mem value=45074841.6 unit=bytes dev=-1.6 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 180,\n          \"components\": []\n        },\n        \"reasoning\": \"Start with a broad scan of metrics across the first 180 seconds to identify initial anomalies.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 180,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 450,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    },\\n    {\\n      \\\"start_time\\\": 30,\\n      \\\"end_time\\\": 60\\n    },\\n    {\\n      \\\"start_time\\\": 60,\\n      \\\"end_time\\\": 90\\n    },\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    },\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=productcatalogservice signal=mem value=10858222.9 unit=bytes dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=shippingservice signal=mem value=8801757.9 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0003 window=0-30 component=cartservice signal=mem value=44473548.8 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0076 window=30-60 component=shippingservice signal=mem value=8799027.2 unit=bytes dev=-1.8 n=30\\\",\\n    \\\"[metrics] id=M0077 window=30-60 component=paymentservice signal=mem value=44476689.1 unit=bytes dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0078 window=30-60 component=adservice signal=workload value=16.08 unit=rps dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0151 window=60-90 component=adservice signal=mem value=107143577.6 unit=bytes dev=-1.8 n=30\\\",\\n    \\\"[metrics] id=M0152 window=60-90 component=currencyservice signal=mem value=44384256 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0153 window=60-90 component=shippingservice signal=mem value=8823193.6 unit=bytes dev=-1.4 n=30\\\",\\n    \\\"[metrics] id=M0226 window=90-120 component=emailservice signal=latency.p50 value=0.00305806 unit=s dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M0227 window=90-120 component=emailservice signal=latency.p90 value=0.0047045 unit=s dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M0228 window=90-120 component=adservice signal=mem value=107183035.7 unit=bytes dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0301 window=120-150 component=productcatalogservice signal=latency.p90 value=0.00439611 unit=s dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0302 window=120-150 component=checkoutservice signal=workload value=1.2978 unit=rps dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0303 window=120-150 component=checkoutservice signal=cpu value=0.475878 unit=percent dev=+1.3 n=30\\\",\\n    \\\"[metrics] id=M0376 window=150-180 component=paymentservice signal=cpu value=1.0185 unit=percent dev=+2.7 n=30\\\",\\n    \\\"[metrics] id=M0377 window=150-180 component=checkoutservice signal=cpu value=0.520404 unit=percent dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M0378 window=150-180 component=recommendationservice signal=mem value=45074841.6 unit=bytes dev=-1.6 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 0-180s metrics. Paymentservice cpu dev=+2.7 is highest anomaly. Checkoutservice cpu dev=+1.8 and workload dev=+1.4. Emailservice latency dev=+1.6. Root cause likely paymentservice_cpu.",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0376 window=150-180 component=paymentservice signal=cpu value=1.0185 unit=percent dev=+2.7 n=30",
+            "[metrics] id=M0303 window=120-150 component=checkoutservice signal=cpu value=0.475878 unit=percent dev=+1.3 n=30",
+            "[metrics] id=M0226 window=90-120 component=emailservice signal=latency.p50 value=0.00305806 unit=s dev=+1.6 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "paymentservice",
+              "reason": "cpu"
+            },
+            {
+              "rank": 2,
+              "component": "checkoutservice",
+              "reason": "cpu"
+            },
+            {
+              "rank": 3,
+              "component": "emailservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 18.226,
+        "reasoner": 41.771,
+        "tool": 0.186,
+        "all": 60.182
+      }
+    },
+    {
+      "step": 2,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 120,
+              "end_time": 210,
+              "components": [
+                "paymentservice"
+              ]
+            },
+            "reasoning": "Focus on paymentservice metrics and traces around the 150-180s CPU anomaly to validate sustained issues."
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 120,
+              "end_time": 210,
+              "components": [
+                "paymentservice"
+              ]
+            },
+            "reasoning": "Focus on paymentservice metrics and traces around the 150-180s CPU anomaly to validate sustained issues."
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 120,\n    \"end_time\": 210,\n    \"components\": [\n      \"paymentservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 27,\n  \"matched_count\": 125,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    },\n    {\n      \"start_time\": 180,\n      \"end_time\": 210\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0308 window=120-150 component=paymentservice signal=workload value=1.2708 unit=rps dev=+1.1 n=30\",\n    \"[metrics] id=M0314 window=120-150 component=paymentservice signal=cpu value=0.736611 unit=percent dev=+0.8 n=30\",\n    \"[metrics] id=M0317 window=120-150 component=paymentservice signal=latency.p90 value=0.00508315 unit=s dev=-0.7 n=30\",\n    \"[traces] id=T0471 window=120-150 edge=checkoutservice>paymentservice op=Charge signal=call.count value=25 unit=count dev=+2.9 n=25\",\n    \"[traces] id=T0506 window=120-150 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=244.1 unit=us dev=-0.6 n=25\",\n    \"[traces] id=T0507 window=120-150 edge=checkoutservice>paymentservice op=Charge signal=latency.self_p99 value=244.1 unit=us dev=-0.6 n=25\",\n    \"[logs] id=L2081 window=120-150 component=paymentservice template_id=1536 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"113\\\\\\\",\\\\\\\"nanos\\\\\\\":677452456},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[logs] id=L2082 window=120-150 component=paymentservice template_id=1539 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"119\\\\\\\",\\\\\\\"nanos\\\\\\\":30128260},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[logs] id=L2083 window=120-150 component=paymentservice template_id=1566 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"1845\\\\\\\",\\\\\\\"nanos\\\\\\\":120877491},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[metrics] id=M0376 window=150-180 component=paymentservice signal=cpu value=1.0185 unit=percent dev=+2.7 n=30\",\n    \"[metrics] id=M0381 window=150-180 component=paymentservice signal=workload value=1.2865 unit=rps dev=+1.2 n=30\",\n    \"[metrics] id=M0411 window=150-180 component=paymentservice signal=latency.p90 value=0.00531846 unit=s dev=-0.5 n=30\",\n    \"[traces] id=T0616 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=269 unit=us dev=-0.5 n=13\",\n    \"[traces] id=T0617 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=latency.self_p99 value=269 unit=us dev=-0.5 n=13\",\n    \"[traces] id=T0662 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=call.count value=13 unit=count dev=-0.0 n=13\",\n    \"[logs] id=L2589 window=150-180 component=paymentservice template_id=1549 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"145\\\\\\\",\\\\\\\"nanos\\\\\\\":780125606},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[logs] id=L2590 window=150-180 component=paymentservice template_id=1587 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"26\\\\\\\",\\\\\\\"nanos\\\\\\\":723233966},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[logs] id=L2591 window=150-180 component=paymentservice template_id=1611 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"513\\\\\\\",\\\\\\\"nanos\\\\\\\":736442277},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[metrics] id=M0462 window=180-210 component=paymentservice signal=cpu value=0.744171 unit=percent dev=+0.8 n=30\",\n    \"[metrics] id=M0482 window=180-210 component=paymentservice signal=latency.p90 value=0.00535604 unit=s dev=-0.4 n=30\",\n    \"[metrics] id=M0484 window=180-210 component=paymentservice signal=workload value=0.7379 unit=rps dev=-0.4 n=30\",\n    \"[traces] id=T0726 window=180-210 edge=checkoutservice>paymentservice op=Charge signal=call.count value=8 unit=count dev=-1.2 n=8\",\n    \"[traces] id=T0764 window=180-210 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=427.8 unit=us dev=-0.3 n=8\",\n    \"[traces] id=T0765 window=180-210 edge=checkoutservice>paymentservice op=Charge signal=latency.self_p99 value=427.8 unit=us dev=-0.3 n=8\",\n    \"[logs] id=L3026 window=180-210 component=paymentservice template_id=1541 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"1216\\\\\\\",\\\\\\\"nanos\\\\\\\":248378596},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[logs] id=L3027 window=180-210 component=paymentservice template_id=1637 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"CAD\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"72\\\\\\\",\\\\\\\"nanos\\\\\\\":180833256},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\",\n    \"[logs] id=L3028 window=180-210 component=paymentservice template_id=1667 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\"PaymentService#Charge invoked with request {\\\\\\\"amount\\\\\\\":{\\\\\\\"currency_code\\\\\\\":\\\\\\\"EUR\\\\\\\",\\\\\\\"units\\\\\\\":\\\\\\\"117\\\\\\\",\\\\\\\"nanos\\\\\\\":585139320},\\\\\\\"credit_card\\\\\\\":{\\\\\\\"credit_card_number\\\\\\\":\\\\\\\"4432-8015-6152-0454\\\\\\\",\\\\\\\"credit_card_cvv\\\\\\\":672,\\\\\\\"credit_card_expiration_year\\\\\\\":2039,\\\\\\\"credit_card_expiration_month\\\\\\\":1}}\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 120,\n          \"end_time\": 210,\n          \"components\": [\n            \"paymentservice\"\n          ]\n        },\n        \"reasoning\": \"Focus on paymentservice metrics and traces around the 150-180s CPU anomaly to validate sustained issues.\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 120,\\n    \\\"end_time\\\": 210,\\n    \\\"components\\\": [\\n      \\\"paymentservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 27,\\n  \\\"matched_count\\\": 125,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    },\\n    {\\n      \\\"start_time\\\": 180,\\n      \\\"end_time\\\": 210\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0308 window=120-150 component=paymentservice signal=workload value=1.2708 unit=rps dev=+1.1 n=30\\\",\\n    \\\"[metrics] id=M0314 window=120-150 component=paymentservice signal=cpu value=0.736611 unit=percent dev=+0.8 n=30\\\",\\n    \\\"[metrics] id=M0317 window=120-150 component=paymentservice signal=latency.p90 value=0.00508315 unit=s dev=-0.7 n=30\\\",\\n    \\\"[traces] id=T0471 window=120-150 edge=checkoutservice>paymentservice op=Charge signal=call.count value=25 unit=count dev=+2.9 n=25\\\",\\n    \\\"[traces] id=T0506 window=120-150 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=244.1 unit=us dev=-0.6 n=25\\\",\\n    \\\"[traces] id=T0507 window=120-150 edge=checkoutservice>paymentservice op=Charge signal=latency.self_p99 value=244.1 unit=us dev=-0.6 n=25\\\",\\n    \\\"[logs] id=L2081 window=120-150 component=paymentservice template_id=1536 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"113\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":677452456},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[logs] id=L2082 window=120-150 component=paymentservice template_id=1539 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"119\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":30128260},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[logs] id=L2083 window=120-150 component=paymentservice template_id=1566 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"1845\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":120877491},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[metrics] id=M0376 window=150-180 component=paymentservice signal=cpu value=1.0185 unit=percent dev=+2.7 n=30\\\",\\n    \\\"[metrics] id=M0381 window=150-180 component=paymentservice signal=workload value=1.2865 unit=rps dev=+1.2 n=30\\\",\\n    \\\"[metrics] id=M0411 window=150-180 component=paymentservice signal=latency.p90 value=0.00531846 unit=s dev=-0.5 n=30\\\",\\n    \\\"[traces] id=T0616 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=269 unit=us dev=-0.5 n=13\\\",\\n    \\\"[traces] id=T0617 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=latency.self_p99 value=269 unit=us dev=-0.5 n=13\\\",\\n    \\\"[traces] id=T0662 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=call.count value=13 unit=count dev=-0.0 n=13\\\",\\n    \\\"[logs] id=L2589 window=150-180 component=paymentservice template_id=1549 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"145\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":780125606},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[logs] id=L2590 window=150-180 component=paymentservice template_id=1587 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"26\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":723233966},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[logs] id=L2591 window=150-180 component=paymentservice template_id=1611 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"513\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":736442277},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[metrics] id=M0462 window=180-210 component=paymentservice signal=cpu value=0.744171 unit=percent dev=+0.8 n=30\\\",\\n    \\\"[metrics] id=M0482 window=180-210 component=paymentservice signal=latency.p90 value=0.00535604 unit=s dev=-0.4 n=30\\\",\\n    \\\"[metrics] id=M0484 window=180-210 component=paymentservice signal=workload value=0.7379 unit=rps dev=-0.4 n=30\\\",\\n    \\\"[traces] id=T0726 window=180-210 edge=checkoutservice>paymentservice op=Charge signal=call.count value=8 unit=count dev=-1.2 n=8\\\",\\n    \\\"[traces] id=T0764 window=180-210 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=427.8 unit=us dev=-0.3 n=8\\\",\\n    \\\"[traces] id=T0765 window=180-210 edge=checkoutservice>paymentservice op=Charge signal=latency.self_p99 value=427.8 unit=us dev=-0.3 n=8\\\",\\n    \\\"[logs] id=L3026 window=180-210 component=paymentservice template_id=1541 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"1216\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":248378596},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[logs] id=L3027 window=180-210 component=paymentservice template_id=1637 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"CAD\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"72\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":180833256},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\",\\n    \\\"[logs] id=L3028 window=180-210 component=paymentservice template_id=1667 level=info signal=log.count value=1 unit=count dev=+0.0 template=\\\\\\\"PaymentService#Charge invoked with request {\\\\\\\\\\\\\\\"amount\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"currency_code\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"EUR\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"units\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"117\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"nanos\\\\\\\\\\\\\\\":585139320},\\\\\\\\\\\\\\\"credit_card\\\\\\\\\\\\\\\":{\\\\\\\\\\\\\\\"credit_card_number\\\\\\\\\\\\\\\":\\\\\\\\\\\\\\\"4432-8015-6152-0454\\\\\\\\\\\\\\\",\\\\\\\\\\\\\\\"credit_card_cvv\\\\\\\\\\\\\\\":672,\\\\\\\\\\\\\\\"credit_card_expiration_year\\\\\\\\\\\\\\\":2039,\\\\\\\\\\\\\\\"credit_card_expiration_month\\\\\\\\\\\\\\\":1}}\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 120-210s paymentservice metrics. Sustained CPU dev=+2.7 confirms resource exhaustion. Traces show normal latency. Root cause remains paymentservice_cpu.",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0376 window=150-180 component=paymentservice signal=cpu value=1.0185 unit=percent dev=+2.7 n=30",
+            "[metrics] id=M0303 window=120-150 component=checkoutservice signal=cpu value=0.475878 unit=percent dev=+1.3 n=30",
+            "[metrics] id=M0226 window=90-120 component=emailservice signal=latency.p50 value=0.00305806 unit=s dev=+1.6 n=30",
+            "[metrics] id=M0381 window=150-180 component=paymentservice signal=workload value=1.2865 unit=rps dev=+1.2 n=30"
+          ],
+          "traces": [
+            "[traces] id=T0616 window=150-180 edge=checkoutservice>paymentservice op=Charge signal=latency.p99 value=269 unit=us dev=-0.5 n=13"
+          ],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "paymentservice",
+              "reason": "cpu"
+            },
+            {
+              "rank": 2,
+              "component": "checkoutservice",
+              "reason": "workload"
+            },
+            {
+              "rank": 3,
+              "component": "emailservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 29.698,
+        "reasoner": 24.929,
+        "tool": 0.029,
+        "all": 54.656
+      }
+    },
+    {
+      "step": 3,
+      "controller": {
+        "completed": true
+      },
+      "observation": "Controller marked analysis complete.",
+      "reasoner": {
+        "analysis": "Checked paymentservice CPU spike (dev=+2.7) as root cause. Traces show normal latency. Checkoutservice and emailservice show secondary anomalies.",
+        "final_ranking": [
+          {
+            "time": 150,
+            "component": "paymentservice",
+            "reason": "cpu"
+          },
+          {
+            "time": 120,
+            "component": "checkoutservice",
+            "reason": "cpu"
+          },
+          {
+            "time": 90,
+            "component": "emailservice",
+            "reason": "latency"
+          }
+        ]
+      },
+      "timing_s": {
+        "controller": 20.219,
+        "reasoner": 78.989,
+        "tool": 0.0,
+        "all": 99.208
+      }
+    }
+  ],
+  "timing_s": {
+    "all": 214.101
+  }
+}

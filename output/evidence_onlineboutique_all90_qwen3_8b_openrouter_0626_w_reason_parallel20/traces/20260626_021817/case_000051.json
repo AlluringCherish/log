@@ -1,0 +1,494 @@
+{
+  "case": {
+    "case_name": "case_000051",
+    "case_dir": "Benchmarks/OnlineBoutique_evidence/cases/case_000051",
+    "time_context": "evidence",
+    "available_files": {
+      "metrics": "Benchmarks/OnlineBoutique_evidence/cases/case_000051/simple_metrics.csv"
+    },
+    "possible_root_cause_components": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_reasons": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "possible_root_cause_services": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_metrics": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "service_dependency_graph": {
+      "nodes": [
+        "loadgenerator",
+        "frontend",
+        "checkoutservice",
+        "adservice",
+        "recommendationservice",
+        "productcatalogservice",
+        "cartservice",
+        "redis",
+        "paymentservice",
+        "emailservice",
+        "shippingservice",
+        "currencyservice"
+      ],
+      "edges": [
+        {
+          "caller": "loadgenerator",
+          "callee": "frontend"
+        },
+        {
+          "caller": "frontend",
+          "callee": "checkoutservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "adservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "recommendationservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "recommendationservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "paymentservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "emailservice"
+        },
+        {
+          "caller": "cartservice",
+          "callee": "redis"
+        }
+      ],
+      "available": true
+    },
+    "prediction_format": "Return ranked root causes as objects with `time` as Unix seconds, `component` as a candidate root cause service, and `reason` as a candidate root cause metric.",
+    "dataset": "Online Boutique",
+    "telemetry_time_range": {
+      "unit": "unix_seconds",
+      "start_time": 0,
+      "end_time": 1440,
+      "sources": {
+        "metrics": {
+          "column": "time",
+          "unit": "unix_seconds",
+          "start_time": 0,
+          "end_time": 1440,
+          "row_count": 1441
+        }
+      }
+    },
+    "available_read_apis": [
+      "get_evidence"
+    ],
+    "evidence_time_unit": "relative_seconds_from_case_start"
+  },
+  "prediction": [
+    "currencyservice_latency",
+    "checkoutservice_mem",
+    "productcatalogservice_mem"
+  ],
+  "final_ranking": [
+    {
+      "time": 90,
+      "component": "currencyservice",
+      "reason": "latency"
+    },
+    {
+      "time": 90,
+      "component": "checkoutservice",
+      "reason": "mem"
+    },
+    {
+      "time": 150,
+      "component": "productcatalogservice",
+      "reason": "mem"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Perform metrics-first full time scan of 0-180 seconds"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Perform metrics-first full time scan of 0-180 seconds"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 180,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 444,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    },\n    {\n      \"start_time\": 30,\n      \"end_time\": 60\n    },\n    {\n      \"start_time\": 60,\n      \"end_time\": 90\n    },\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    },\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=redis signal=diskio value=18250 unit=bytes/s dev=+2.2 n=30\",\n    \"[metrics] id=M0003 window=0-30 component=cartservice signal=mem value=43425792 unit=bytes dev=-1.8 n=30\",\n    \"[metrics] id=M0075 window=30-60 component=cartservice signal=cpu value=1.6804 unit=percent dev=-1.7 n=30\",\n    \"[metrics] id=M0076 window=30-60 component=cartservice signal=mem value=43432345.6 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0077 window=30-60 component=paymentservice signal=cpu value=0.510759 unit=percent dev=-1.4 n=30\",\n    \"[metrics] id=M0149 window=60-90 component=currencyservice signal=cpu value=26.3 unit=percent dev=-1.4 n=30\",\n    \"[metrics] id=M0150 window=60-90 component=checkoutservice signal=latency.p50 value=0.10536 unit=s dev=+1.3 n=30\",\n    \"[metrics] id=M0151 window=60-90 component=shippingservice signal=cpu value=0.231948 unit=percent dev=-1.2 n=30\",\n    \"[metrics] id=M0223 window=90-120 component=recommendationservice signal=mem value=45357192.5 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0224 window=90-120 component=shippingservice signal=latency.p50 value=0.00291201 unit=s dev=+1.2 n=30\",\n    \"[metrics] id=M0225 window=90-120 component=checkoutservice signal=mem value=12210449.1 unit=bytes dev=+1.1 n=30\",\n    \"[metrics] id=M0297 window=120-150 component=recommendationservice signal=mem value=45324151.5 unit=bytes dev=-2.5 n=30\",\n    \"[metrics] id=M0298 window=120-150 component=frontend signal=latency.p50 value=0.0429387 unit=s dev=-1.6 n=30\",\n    \"[metrics] id=M0299 window=120-150 component=adservice signal=mem value=109813077.3 unit=bytes dev=-1.2 n=30\",\n    \"[metrics] id=M0371 window=150-180 component=productcatalogservice signal=mem value=25279146.7 unit=bytes dev=+2.0 n=30\",\n    \"[metrics] id=M0372 window=150-180 component=emailservice signal=mem value=42188800 unit=bytes dev=-1.7 n=30\",\n    \"[metrics] id=M0373 window=150-180 component=shippingservice signal=workload value=9.2598 unit=rps dev=+1.7 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 180,\n          \"components\": []\n        },\n        \"reasoning\": \"Perform metrics-first full time scan of 0-180 seconds\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 180,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 444,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    },\\n    {\\n      \\\"start_time\\\": 30,\\n      \\\"end_time\\\": 60\\n    },\\n    {\\n      \\\"start_time\\\": 60,\\n      \\\"end_time\\\": 90\\n    },\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    },\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=redis signal=diskio value=18250 unit=bytes/s dev=+2.2 n=30\\\",\\n    \\\"[metrics] id=M0003 window=0-30 component=cartservice signal=mem value=43425792 unit=bytes dev=-1.8 n=30\\\",\\n    \\\"[metrics] id=M0075 window=30-60 component=cartservice signal=cpu value=1.6804 unit=percent dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0076 window=30-60 component=cartservice signal=mem value=43432345.6 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0077 window=30-60 component=paymentservice signal=cpu value=0.510759 unit=percent dev=-1.4 n=30\\\",\\n    \\\"[metrics] id=M0149 window=60-90 component=currencyservice signal=cpu value=26.3 unit=percent dev=-1.4 n=30\\\",\\n    \\\"[metrics] id=M0150 window=60-90 component=checkoutservice signal=latency.p50 value=0.10536 unit=s dev=+1.3 n=30\\\",\\n    \\\"[metrics] id=M0151 window=60-90 component=shippingservice signal=cpu value=0.231948 unit=percent dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0223 window=90-120 component=recommendationservice signal=mem value=45357192.5 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0224 window=90-120 component=shippingservice signal=latency.p50 value=0.00291201 unit=s dev=+1.2 n=30\\\",\\n    \\\"[metrics] id=M0225 window=90-120 component=checkoutservice signal=mem value=12210449.1 unit=bytes dev=+1.1 n=30\\\",\\n    \\\"[metrics] id=M0297 window=120-150 component=recommendationservice signal=mem value=45324151.5 unit=bytes dev=-2.5 n=30\\\",\\n    \\\"[metrics] id=M0298 window=120-150 component=frontend signal=latency.p50 value=0.0429387 unit=s dev=-1.6 n=30\\\",\\n    \\\"[metrics] id=M0299 window=120-150 component=adservice signal=mem value=109813077.3 unit=bytes dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0371 window=150-180 component=productcatalogservice signal=mem value=25279146.7 unit=bytes dev=+2.0 n=30\\\",\\n    \\\"[metrics] id=M0372 window=150-180 component=emailservice signal=mem value=42188800 unit=bytes dev=-1.7 n=30\\\",\\n    \\\"[metrics] id=M0373 window=150-180 component=shippingservice signal=workload value=9.2598 unit=rps dev=+1.7 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 0-180s metrics. Currencyservice latency.p50 dev=+2.3, productcatalogservice mem dev=+2.0, shippingservice workload dev=+1.7. Root cause is currencyservice latency.",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30",
+            "[metrics] id=M0225 window=90-120 component=checkoutservice signal=mem value=12210449.1 unit=bytes dev=+1.1 n=30",
+            "[metrics] id=M0371 window=150-180 component=productcatalogservice signal=mem value=25279146.7 unit=bytes dev=+2.0 n=30"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "currencyservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 7.834,
+        "reasoner": 74.811,
+        "tool": 0.181,
+        "all": 82.826
+      }
+    },
+    {
+      "step": 2,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 60,
+              "components": [
+                "currencyservice"
+              ]
+            },
+            "reasoning": "Validate currencyservice latency with focused traces and logs in 0-60s window"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 60,
+              "components": [
+                "currencyservice"
+              ]
+            },
+            "reasoning": "Validate currencyservice latency with focused traces and logs in 0-60s window"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 60,\n    \"components\": [\n      \"currencyservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 16,\n  \"matched_count\": 42,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    },\n    {\n      \"start_time\": 30,\n      \"end_time\": 60\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30\",\n    \"[metrics] id=M0015 window=0-30 component=currencyservice signal=workload value=71.73 unit=rps dev=-1.0 n=30\",\n    \"[metrics] id=M0017 window=0-30 component=currencyservice signal=latency.p90 value=0.0344801 unit=s dev=+1.0 n=30\",\n    \"[traces] id=T0006 window=0-30 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=299 unit=count dev=-2.0 n=299\",\n    \"[traces] id=T0018 window=0-30 edge=checkoutservice>currencyservice op=Convert signal=call.count value=24 unit=count dev=-1.8 n=24\",\n    \"[traces] id=T0035 window=0-30 edge=frontend>currencyservice op=Convert signal=call.count value=730 unit=count dev=-1.2 n=730\",\n    \"[logs] id=L0008 window=0-30 component=currencyservice template_id=1543 level=info signal=log.count value=299 unit=count dev=-2.0 template=\\\"Getting supported currencies...\\\"\",\n    \"[logs] id=L0019 window=0-30 component=currencyservice template_id=11909 level=info signal=log.count value=754 unit=count dev=-1.5 template=\\\"conversion request successful\\\"\",\n    \"[metrics] id=M0078 window=30-60 component=currencyservice signal=mem value=45989888 unit=bytes dev=-1.4 n=30\",\n    \"[metrics] id=M0080 window=30-60 component=currencyservice signal=latency.p90 value=0.0231271 unit=s dev=-1.2 n=30\",\n    \"[metrics] id=M0091 window=30-60 component=currencyservice signal=cpu value=28.1 unit=percent dev=-0.7 n=30\",\n    \"[traces] id=T0134 window=30-60 edge=frontend>currencyservice op=Convert signal=call.count value=738 unit=count dev=-1.0 n=738\",\n    \"[traces] id=T0140 window=30-60 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=330 unit=count dev=+0.7 n=330\",\n    \"[traces] id=T0155 window=30-60 edge=checkoutservice>currencyservice op=Convert signal=latency.p99 value=349.1 unit=us dev=-0.6 n=54\",\n    \"[logs] id=L0448 window=30-60 component=currencyservice template_id=11909 level=info signal=log.count value=792 unit=count dev=-0.8 template=\\\"conversion request successful\\\"\",\n    \"[logs] id=L0450 window=30-60 component=currencyservice template_id=1543 level=info signal=log.count value=330 unit=count dev=+0.7 template=\\\"Getting supported currencies...\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 60,\n          \"components\": [\n            \"currencyservice\"\n          ]\n        },\n        \"reasoning\": \"Validate currencyservice latency with focused traces and logs in 0-60s window\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 60,\\n    \\\"components\\\": [\\n      \\\"currencyservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 16,\\n  \\\"matched_count\\\": 42,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    },\\n    {\\n      \\\"start_time\\\": 30,\\n      \\\"end_time\\\": 60\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30\\\",\\n    \\\"[metrics] id=M0015 window=0-30 component=currencyservice signal=workload value=71.73 unit=rps dev=-1.0 n=30\\\",\\n    \\\"[metrics] id=M0017 window=0-30 component=currencyservice signal=latency.p90 value=0.0344801 unit=s dev=+1.0 n=30\\\",\\n    \\\"[traces] id=T0006 window=0-30 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=299 unit=count dev=-2.0 n=299\\\",\\n    \\\"[traces] id=T0018 window=0-30 edge=checkoutservice>currencyservice op=Convert signal=call.count value=24 unit=count dev=-1.8 n=24\\\",\\n    \\\"[traces] id=T0035 window=0-30 edge=frontend>currencyservice op=Convert signal=call.count value=730 unit=count dev=-1.2 n=730\\\",\\n    \\\"[logs] id=L0008 window=0-30 component=currencyservice template_id=1543 level=info signal=log.count value=299 unit=count dev=-2.0 template=\\\\\\\"Getting supported currencies...\\\\\\\"\\\",\\n    \\\"[logs] id=L0019 window=0-30 component=currencyservice template_id=11909 level=info signal=log.count value=754 unit=count dev=-1.5 template=\\\\\\\"conversion request successful\\\\\\\"\\\",\\n    \\\"[metrics] id=M0078 window=30-60 component=currencyservice signal=mem value=45989888 unit=bytes dev=-1.4 n=30\\\",\\n    \\\"[metrics] id=M0080 window=30-60 component=currencyservice signal=latency.p90 value=0.0231271 unit=s dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0091 window=30-60 component=currencyservice signal=cpu value=28.1 unit=percent dev=-0.7 n=30\\\",\\n    \\\"[traces] id=T0134 window=30-60 edge=frontend>currencyservice op=Convert signal=call.count value=738 unit=count dev=-1.0 n=738\\\",\\n    \\\"[traces] id=T0140 window=30-60 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=330 unit=count dev=+0.7 n=330\\\",\\n    \\\"[traces] id=T0155 window=30-60 edge=checkoutservice>currencyservice op=Convert signal=latency.p99 value=349.1 unit=us dev=-0.6 n=54\\\",\\n    \\\"[logs] id=L0448 window=30-60 component=currencyservice template_id=11909 level=info signal=log.count value=792 unit=count dev=-0.8 template=\\\\\\\"conversion request successful\\\\\\\"\\\",\\n    \\\"[logs] id=L0450 window=30-60 component=currencyservice template_id=1543 level=info signal=log.count value=330 unit=count dev=+0.7 template=\\\\\\\"Getting supported currencies...\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 0-60s currencyservice metrics. Latency.p50 dev=+2.3 persists in 0-30s window, while workload dev=-1.0 suggests reduced load. Traces show frontend/checkoutservice calls, validating latency propagation. Root cause remains currencyservice latency.",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30",
+            "[metrics] id=M0225 window=90-120 component=checkoutservice signal=mem value=12210449.1 unit=bytes dev=+1.1 n=30",
+            "[metrics] id=M0371 window=150-180 component=productcatalogservice signal=mem value=25279146.7 unit=bytes dev=+2.0 n=30",
+            "[metrics] id=M0017 window=0-30 component=currencyservice signal=latency.p90 value=0.0344801 unit=s dev=+1.0 n=30",
+            "[metrics] id=M0080 window=30-60 component=currencyservice signal=latency.p90 value=0.0231271 unit=s dev=-1.2 n=30"
+          ],
+          "traces": [
+            "[traces] id=T0006 window=0-30 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=299 unit=count dev=-2.0 n=299",
+            "[traces] id=T0018 window=0-30 edge=checkoutservice>currencyservice op=Convert signal=call.count value=24 unit=count dev=-1.8 n=24",
+            "[traces] id=T0134 window=30-60 edge=frontend>currencyservice op=Convert signal=call.count value=738 unit=count dev=-1.0 n=738"
+          ],
+          "logs": [
+            "[logs] id=L0008 window=0-30 component=currencyservice template_id=1543 level=info signal=log.count value=299 unit=count dev=-2.0 template=\"Getting supported currencies...\""
+          ],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "currencyservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 14.86,
+        "reasoner": 56.113,
+        "tool": 0.023,
+        "all": 70.996
+      }
+    },
+    {
+      "step": 3,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 60,
+              "end_time": 90,
+              "components": [
+                "currencyservice"
+              ]
+            },
+            "reasoning": "Validate currencyservice latency traces in 60-90s window"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 60,
+              "end_time": 90,
+              "components": [
+                "currencyservice"
+              ]
+            },
+            "reasoning": "Validate currencyservice latency traces in 60-90s window"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 60,\n    \"end_time\": 90,\n    \"components\": [\n      \"currencyservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 8,\n  \"matched_count\": 21,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 60,\n      \"end_time\": 90\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0149 window=60-90 component=currencyservice signal=cpu value=26.3 unit=percent dev=-1.4 n=30\",\n    \"[metrics] id=M0170 window=60-90 component=currencyservice signal=latency.p90 value=0.0273845 unit=s dev=-0.4 n=30\",\n    \"[metrics] id=M0183 window=60-90 component=currencyservice signal=latency.p50 value=0.00352783 unit=s dev=-0.3 n=30\",\n    \"[traces] id=T0246 window=60-90 edge=checkoutservice>currencyservice op=Convert signal=call.count value=67 unit=count dev=+1.5 n=67\",\n    \"[traces] id=T0272 window=60-90 edge=frontend>currencyservice op=Convert signal=call.count value=825 unit=count dev=+0.8 n=825\",\n    \"[traces] id=T0278 window=60-90 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=314 unit=count dev=-0.7 n=314\",\n    \"[logs] id=L0916 window=60-90 component=currencyservice template_id=11909 level=info signal=log.count value=892 unit=count dev=+1.1 template=\\\"conversion request successful\\\"\",\n    \"[logs] id=L0934 window=60-90 component=currencyservice template_id=1543 level=info signal=log.count value=314 unit=count dev=-0.7 template=\\\"Getting supported currencies...\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 60,\n          \"end_time\": 90,\n          \"components\": [\n            \"currencyservice\"\n          ]\n        },\n        \"reasoning\": \"Validate currencyservice latency traces in 60-90s window\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 60,\\n    \\\"end_time\\\": 90,\\n    \\\"components\\\": [\\n      \\\"currencyservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 8,\\n  \\\"matched_count\\\": 21,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 60,\\n      \\\"end_time\\\": 90\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0149 window=60-90 component=currencyservice signal=cpu value=26.3 unit=percent dev=-1.4 n=30\\\",\\n    \\\"[metrics] id=M0170 window=60-90 component=currencyservice signal=latency.p90 value=0.0273845 unit=s dev=-0.4 n=30\\\",\\n    \\\"[metrics] id=M0183 window=60-90 component=currencyservice signal=latency.p50 value=0.00352783 unit=s dev=-0.3 n=30\\\",\\n    \\\"[traces] id=T0246 window=60-90 edge=checkoutservice>currencyservice op=Convert signal=call.count value=67 unit=count dev=+1.5 n=67\\\",\\n    \\\"[traces] id=T0272 window=60-90 edge=frontend>currencyservice op=Convert signal=call.count value=825 unit=count dev=+0.8 n=825\\\",\\n    \\\"[traces] id=T0278 window=60-90 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=314 unit=count dev=-0.7 n=314\\\",\\n    \\\"[logs] id=L0916 window=60-90 component=currencyservice template_id=11909 level=info signal=log.count value=892 unit=count dev=+1.1 template=\\\\\\\"conversion request successful\\\\\\\"\\\",\\n    \\\"[logs] id=L0934 window=60-90 component=currencyservice template_id=1543 level=info signal=log.count value=314 unit=count dev=-0.7 template=\\\\\\\"Getting supported currencies...\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 60-90s currencyservice metrics. Latency.p50/p90 dev=-0.3/-0.4 (improvement) with higher call counts. Traces show increased frontend/checkoutservice calls, validating latency propagation. Root cause remains currencyservice latency.",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30",
+            "[metrics] id=M0225 window=90-120 component=checkoutservice signal=mem value=12210449.1 unit=bytes dev=+1.1 n=30",
+            "[metrics] id=M0371 window=150-180 component=productcatalogservice signal=mem value=25279146.7 unit=bytes dev=+2.0 n=30",
+            "[metrics] id=M0017 window=0-30 component=currencyservice signal=latency.p90 value=0.0344801 unit=s dev=+1.0 n=30",
+            "[metrics] id=M0080 window=30-60 component=currencyservice signal=latency.p90 value=0.0231271 unit=s dev=-1.2 n=30",
+            "[metrics] id=M0170 window=60-90 component=currencyservice signal=latency.p90 value=0.0273845 unit=s dev=-0.4 n=30",
+            "[metrics] id=M0183 window=60-90 component=currencyservice signal=latency.p50 value=0.00352783 unit=s dev=-0.3 n=30",
+            "[metrics] id=M0149 window=60-90 component=currencyservice signal=cpu value=26.3 unit=percent dev=-1.4 n=30"
+          ],
+          "traces": [
+            "[traces] id=T0006 window=0-30 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=299 unit=count dev=-2.0 n=299",
+            "[traces] id=T0018 window=0-30 edge=checkoutservice>currencyservice op=Convert signal=call.count value=24 unit=count dev=-1.8 n=24",
+            "[traces] id=T0134 window=30-60 edge=frontend>currencyservice op=Convert signal=call.count value=738 unit=count dev=-1.0 n=738",
+            "[traces] id=T0246 window=60-90 edge=checkoutservice>currencyservice op=Convert signal=call.count value=67 unit=count dev=+1.5 n=67",
+            "[traces] id=T0272 window=60-90 edge=frontend>currencyservice op=Convert signal=call.count value=825 unit=count dev=+0.8 n=825",
+            "[traces] id=T0278 window=60-90 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=314 unit=count dev=-0.7 n=314"
+          ],
+          "logs": [
+            "[logs] id=L0008 window=0-30 component=currencyservice template_id=1543 level=info signal=log.count value=299 unit=count dev=-2.0 template=\"Getting supported currencies...\"",
+            "[logs] id=L0934 window=60-90 component=currencyservice template_id=1543 level=info signal=log.count value=314 unit=count dev=-0.7 template=\"Getting supported currencies...\""
+          ],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "currencyservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 19.086,
+        "reasoner": 45.697,
+        "tool": 0.022,
+        "all": 64.805
+      }
+    },
+    {
+      "step": 4,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 90,
+              "end_time": 120,
+              "components": [
+                "currencyservice"
+              ]
+            },
+            "reasoning": "Validate sustained currencyservice latency in 90-120s window"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 90,
+              "end_time": 120,
+              "components": [
+                "currencyservice"
+              ]
+            },
+            "reasoning": "Validate sustained currencyservice latency in 90-120s window"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 90,\n    \"end_time\": 120,\n    \"components\": [\n      \"currencyservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 8,\n  \"matched_count\": 21,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0232 window=90-120 component=currencyservice signal=workload value=81.13 unit=rps dev=+0.8 n=30\",\n    \"[metrics] id=M0237 window=90-120 component=currencyservice signal=mem value=46881177.6 unit=bytes dev=+0.7 n=30\",\n    \"[metrics] id=M0248 window=90-120 component=currencyservice signal=latency.p90 value=0.0319064 unit=s dev=+0.5 n=30\",\n    \"[traces] id=T0367 window=90-120 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=332 unit=count dev=+0.9 n=332\",\n    \"[traces] id=T0389 window=90-120 edge=checkoutservice>currencyservice op=Convert signal=latency.p99 value=209.6 unit=us dev=-0.6 n=46\",\n    \"[traces] id=T0390 window=90-120 edge=checkoutservice>currencyservice op=Convert signal=latency.self_p99 value=209.6 unit=us dev=-0.6 n=46\",\n    \"[logs] id=L1383 window=90-120 component=currencyservice template_id=1543 level=info signal=log.count value=332 unit=count dev=+0.9 template=\\\"Getting supported currencies...\\\"\",\n    \"[logs] id=L1427 window=90-120 component=currencyservice template_id=11909 level=info signal=log.count value=845 unit=count dev=+0.2 template=\\\"conversion request successful\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 90,\n          \"end_time\": 120,\n          \"components\": [\n            \"currencyservice\"\n          ]\n        },\n        \"reasoning\": \"Validate sustained currencyservice latency in 90-120s window\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 90,\\n    \\\"end_time\\\": 120,\\n    \\\"components\\\": [\\n      \\\"currencyservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 8,\\n  \\\"matched_count\\\": 21,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0232 window=90-120 component=currencyservice signal=workload value=81.13 unit=rps dev=+0.8 n=30\\\",\\n    \\\"[metrics] id=M0237 window=90-120 component=currencyservice signal=mem value=46881177.6 unit=bytes dev=+0.7 n=30\\\",\\n    \\\"[metrics] id=M0248 window=90-120 component=currencyservice signal=latency.p90 value=0.0319064 unit=s dev=+0.5 n=30\\\",\\n    \\\"[traces] id=T0367 window=90-120 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=332 unit=count dev=+0.9 n=332\\\",\\n    \\\"[traces] id=T0389 window=90-120 edge=checkoutservice>currencyservice op=Convert signal=latency.p99 value=209.6 unit=us dev=-0.6 n=46\\\",\\n    \\\"[traces] id=T0390 window=90-120 edge=checkoutservice>currencyservice op=Convert signal=latency.self_p99 value=209.6 unit=us dev=-0.6 n=46\\\",\\n    \\\"[logs] id=L1383 window=90-120 component=currencyservice template_id=1543 level=info signal=log.count value=332 unit=count dev=+0.9 template=\\\\\\\"Getting supported currencies...\\\\\\\"\\\",\\n    \\\"[logs] id=L1427 window=90-120 component=currencyservice template_id=11909 level=info signal=log.count value=845 unit=count dev=+0.2 template=\\\\\\\"conversion request successful\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "Checked 90-120s currencyservice metrics. Latency.p90 dev=+0.5 with increased call counts. Traces show higher frontend/checkoutservice calls, validating latency propagation. Root cause remains currencyservice latency.",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=currencyservice signal=latency.p50 value=0.00371432 unit=s dev=+2.3 n=30",
+            "[metrics] id=M0225 window=90-120 component=checkoutservice signal=mem value=12210449.1 unit=bytes dev=+1.1 n=30",
+            "[metrics] id=M0371 window=150-180 component=productcatalogservice signal=mem value=25279146.7 unit=bytes dev=+2.0 n=30",
+            "[metrics] id=M0017 window=0-30 component=currencyservice signal=latency.p90 value=0.0344801 unit=s dev=+1.0 n=30",
+            "[metrics] id=M0080 window=30-60 component=currencyservice signal=latency.p90 value=0.0231271 unit=s dev=-1.2 n=30",
+            "[metrics] id=M0170 window=60-90 component=currencyservice signal=latency.p90 value=0.0273845 unit=s dev=-0.4 n=30",
+            "[metrics] id=M0183 window=60-90 component=currencyservice signal=latency.p50 value=0.00352783 unit=s dev=-0.3 n=30",
+            "[metrics] id=M0149 window=60-90 component=currencyservice signal=cpu value=26.3 unit=percent dev=-1.4 n=30",
+            "[metrics] id=M0248 window=90-120 component=currencyservice signal=latency.p90 value=0.0319064 unit=s dev=+0.5 n=30",
+            "[metrics] id=M0232 window=90-120 component=currencyservice signal=workload value=81.13 unit=rps dev=+0.8 n=30",
+            "[metrics] id=M0237 window=90-120 component=currencyservice signal=mem value=46881177.6 unit=bytes dev=+0.7 n=30"
+          ],
+          "traces": [
+            "[traces] id=T0006 window=0-30 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=299 unit=count dev=-2.0 n=299",
+            "[traces] id=T0018 window=0-30 edge=checkoutservice>currencyservice op=Convert signal=call.count value=24 unit=count dev=-1.8 n=24",
+            "[traces] id=T0134 window=30-60 edge=frontend>currencyservice op=Convert signal=call.count value=738 unit=count dev=-1.0 n=738",
+            "[traces] id=T0246 window=60-90 edge=checkoutservice>currencyservice op=Convert signal=call.count value=67 unit=count dev=+1.5 n=67",
+            "[traces] id=T0272 window=60-90 edge=frontend>currencyservice op=Convert signal=call.count value=825 unit=count dev=+0.8 n=825",
+            "[traces] id=T0278 window=60-90 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=314 unit=count dev=-0.7 n=314",
+            "[traces] id=T0389 window=90-120 edge=checkoutservice>currencyservice op=Convert signal=latency.p99 value=209.6 unit=us dev=-0.6 n=46",
+            "[traces] id=T0367 window=90-120 edge=frontend>currencyservice op=GetSupportedCurrencies signal=call.count value=332 unit=count dev=+0.9 n=332",
+            "[traces] id=T0390 window=90-120 edge=checkoutservice>currencyservice op=Convert signal=latency.self_p99 value=209.6 unit=us dev=-0.6 n=46"
+          ],
+          "logs": [
+            "[logs] id=L0008 window=0-30 component=currencyservice template_id=1543 level=info signal=log.count value=299 unit=count dev=-2.0 template=\"Getting supported currencies...\"",
+            "[logs] id=L0934 window=60-90 component=currencyservice template_id=1543 level=info signal=log.count value=314 unit=count dev=-0.7 template=\"Getting supported currencies...\"",
+            "[logs] id=L1383 window=90-120 component=currencyservice template_id=1543 level=info signal=log.count value=332 unit=count dev=+0.9 template=\"Getting supported currencies...\""
+          ],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "currencyservice",
+              "reason": "latency"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 42.853,
+        "reasoner": 34.254,
+        "tool": 0.019,
+        "all": 77.127
+      }
+    },
+    {
+      "step": 5,
+      "controller": {
+        "completed": true
+      },
+      "observation": "Controller marked analysis complete.",
+      "reasoner": {
+        "analysis": "Currencyservice latency.p90 dev=+0.5 drives frontend/checkoutservice call count spikes. Mem and workload anomalies in checkoutservice and productcatalogservice are secondary effects.",
+        "final_ranking": [
+          {
+            "time": 90,
+            "component": "currencyservice",
+            "reason": "latency"
+          },
+          {
+            "time": 90,
+            "component": "checkoutservice",
+            "reason": "mem"
+          },
+          {
+            "time": 150,
+            "component": "productcatalogservice",
+            "reason": "mem"
+          }
+        ]
+      },
+      "timing_s": {
+        "controller": 50.821,
+        "reasoner": 18.337,
+        "tool": 0.0,
+        "all": 69.159
+      }
+    }
+  ],
+  "timing_s": {
+    "all": 364.917
+  }
+}

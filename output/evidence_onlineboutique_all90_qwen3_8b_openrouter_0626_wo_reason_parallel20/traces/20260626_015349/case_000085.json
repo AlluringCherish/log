@@ -1,0 +1,436 @@
+{
+  "case": {
+    "case_name": "case_000085",
+    "case_dir": "Benchmarks/OnlineBoutique_evidence/cases/case_000085",
+    "time_context": "evidence",
+    "available_files": {
+      "metrics": "Benchmarks/OnlineBoutique_evidence/cases/case_000085/simple_metrics.csv"
+    },
+    "possible_root_cause_components": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_reasons": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "possible_root_cause_services": [
+      "checkoutservice",
+      "currencyservice",
+      "emailservice",
+      "productcatalogservice",
+      "recommendationservice"
+    ],
+    "possible_root_cause_metrics": [
+      "cpu",
+      "mem",
+      "diskio",
+      "latency",
+      "socket"
+    ],
+    "service_dependency_graph": {
+      "nodes": [
+        "loadgenerator",
+        "frontend",
+        "checkoutservice",
+        "adservice",
+        "recommendationservice",
+        "productcatalogservice",
+        "cartservice",
+        "redis",
+        "paymentservice",
+        "emailservice",
+        "shippingservice",
+        "currencyservice"
+      ],
+      "edges": [
+        {
+          "caller": "loadgenerator",
+          "callee": "frontend"
+        },
+        {
+          "caller": "frontend",
+          "callee": "checkoutservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "adservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "recommendationservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "frontend",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "recommendationservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "productcatalogservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "cartservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "shippingservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "currencyservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "paymentservice"
+        },
+        {
+          "caller": "checkoutservice",
+          "callee": "emailservice"
+        },
+        {
+          "caller": "cartservice",
+          "callee": "redis"
+        }
+      ],
+      "available": true
+    },
+    "prediction_format": "Return ranked root causes as objects with `time` as Unix seconds, `component` as a candidate root cause service, and `reason` as a candidate root cause metric.",
+    "dataset": "Online Boutique",
+    "telemetry_time_range": {
+      "unit": "unix_seconds",
+      "start_time": 0,
+      "end_time": 1440,
+      "sources": {
+        "metrics": {
+          "column": "time",
+          "unit": "unix_seconds",
+          "start_time": 0,
+          "end_time": 1440,
+          "row_count": 1441
+        }
+      }
+    },
+    "available_read_apis": [
+      "get_evidence"
+    ],
+    "evidence_time_unit": "relative_seconds_from_case_start"
+  },
+  "prediction": [
+    "emailservice_mem",
+    "checkoutservice_latency",
+    "emailservice_socket"
+  ],
+  "final_ranking": [
+    {
+      "time": 0,
+      "component": "emailservice",
+      "reason": "mem"
+    },
+    {
+      "time": 0,
+      "component": "checkoutservice",
+      "reason": "latency"
+    },
+    {
+      "time": 0,
+      "component": "emailservice",
+      "reason": "socket"
+    }
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Initial broad scan for metric anomalies in first 180 seconds"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 180,
+              "components": []
+            },
+            "reasoning": "Initial broad scan for metric anomalies in first 180 seconds"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 180,\n    \"components\": []\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 18,\n  \"matched_count\": 418,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    },\n    {\n      \"start_time\": 30,\n      \"end_time\": 60\n    },\n    {\n      \"start_time\": 60,\n      \"end_time\": 90\n    },\n    {\n      \"start_time\": 90,\n      \"end_time\": 120\n    },\n    {\n      \"start_time\": 120,\n      \"end_time\": 150\n    },\n    {\n      \"start_time\": 150,\n      \"end_time\": 180\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=emailservice signal=mem value=86937053.9 unit=bytes dev=+4.4 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=emailservice signal=socket value=6 unit=count dev=+4.4 n=30\",\n    \"[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket value=19 unit=count dev=+4.2 n=30\",\n    \"[metrics] id=M0070 window=30-60 component=frontend signal=socket value=53.13 unit=count dev=+3.1 n=30\",\n    \"[metrics] id=M0071 window=30-60 component=cartservice signal=mem value=86523357.9 unit=bytes dev=+3.1 n=30\",\n    \"[metrics] id=M0072 window=30-60 component=cartservice signal=socket value=10 unit=count dev=+3.1 n=30\",\n    \"[metrics] id=M0139 window=60-90 component=adservice signal=mem value=208936960 unit=bytes dev=+2.6 n=30\",\n    \"[metrics] id=M0140 window=60-90 component=adservice signal=socket value=8 unit=count dev=+2.6 n=30\",\n    \"[metrics] id=M0141 window=60-90 component=checkoutservice signal=cpu value=0.224032 unit=percent dev=-1.6 n=30\",\n    \"[metrics] id=M0209 window=90-120 component=cartservice signal=cpu value=3.2718 unit=percent dev=+1.8 n=30\",\n    \"[metrics] id=M0210 window=90-120 component=adservice signal=cpu value=3.8955 unit=percent dev=+1.5 n=30\",\n    \"[metrics] id=M0211 window=90-120 component=cartservice signal=latency.p50 value=0.00387643 unit=s dev=+1.4 n=30\",\n    \"[metrics] id=M0279 window=120-150 component=cartservice signal=cpu value=3.1675 unit=percent dev=+1.6 n=30\",\n    \"[metrics] id=M0280 window=120-150 component=productcatalogservice signal=latency.p90 value=0.00446423 unit=s dev=+1.5 n=30\",\n    \"[metrics] id=M0281 window=120-150 component=adservice signal=workload value=14.06 unit=rps dev=-1.5 n=30\",\n    \"[metrics] id=M0349 window=150-180 component=shippingservice signal=cpu value=0.2037 unit=percent dev=-1.8 n=30\",\n    \"[metrics] id=M0350 window=150-180 component=shippingservice signal=latency.p50 value=0.00276955 unit=s dev=-1.2 n=30\",\n    \"[metrics] id=M0351 window=150-180 component=productcatalogservice signal=latency.p90 value=0.00445299 unit=s dev=+1.1 n=30\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 180,\n          \"components\": []\n        },\n        \"reasoning\": \"Initial broad scan for metric anomalies in first 180 seconds\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 180,\\n    \\\"components\\\": []\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 18,\\n  \\\"matched_count\\\": 418,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    },\\n    {\\n      \\\"start_time\\\": 30,\\n      \\\"end_time\\\": 60\\n    },\\n    {\\n      \\\"start_time\\\": 60,\\n      \\\"end_time\\\": 90\\n    },\\n    {\\n      \\\"start_time\\\": 90,\\n      \\\"end_time\\\": 120\\n    },\\n    {\\n      \\\"start_time\\\": 120,\\n      \\\"end_time\\\": 150\\n    },\\n    {\\n      \\\"start_time\\\": 150,\\n      \\\"end_time\\\": 180\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=emailservice signal=mem value=86937053.9 unit=bytes dev=+4.4 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=emailservice signal=socket value=6 unit=count dev=+4.4 n=30\\\",\\n    \\\"[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket value=19 unit=count dev=+4.2 n=30\\\",\\n    \\\"[metrics] id=M0070 window=30-60 component=frontend signal=socket value=53.13 unit=count dev=+3.1 n=30\\\",\\n    \\\"[metrics] id=M0071 window=30-60 component=cartservice signal=mem value=86523357.9 unit=bytes dev=+3.1 n=30\\\",\\n    \\\"[metrics] id=M0072 window=30-60 component=cartservice signal=socket value=10 unit=count dev=+3.1 n=30\\\",\\n    \\\"[metrics] id=M0139 window=60-90 component=adservice signal=mem value=208936960 unit=bytes dev=+2.6 n=30\\\",\\n    \\\"[metrics] id=M0140 window=60-90 component=adservice signal=socket value=8 unit=count dev=+2.6 n=30\\\",\\n    \\\"[metrics] id=M0141 window=60-90 component=checkoutservice signal=cpu value=0.224032 unit=percent dev=-1.6 n=30\\\",\\n    \\\"[metrics] id=M0209 window=90-120 component=cartservice signal=cpu value=3.2718 unit=percent dev=+1.8 n=30\\\",\\n    \\\"[metrics] id=M0210 window=90-120 component=adservice signal=cpu value=3.8955 unit=percent dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0211 window=90-120 component=cartservice signal=latency.p50 value=0.00387643 unit=s dev=+1.4 n=30\\\",\\n    \\\"[metrics] id=M0279 window=120-150 component=cartservice signal=cpu value=3.1675 unit=percent dev=+1.6 n=30\\\",\\n    \\\"[metrics] id=M0280 window=120-150 component=productcatalogservice signal=latency.p90 value=0.00446423 unit=s dev=+1.5 n=30\\\",\\n    \\\"[metrics] id=M0281 window=120-150 component=adservice signal=workload value=14.06 unit=rps dev=-1.5 n=30\\\",\\n    \\\"[metrics] id=M0349 window=150-180 component=shippingservice signal=cpu value=0.2037 unit=percent dev=-1.8 n=30\\\",\\n    \\\"[metrics] id=M0350 window=150-180 component=shippingservice signal=latency.p50 value=0.00276955 unit=s dev=-1.2 n=30\\\",\\n    \\\"[metrics] id=M0351 window=150-180 component=productcatalogservice signal=latency.p90 value=0.00445299 unit=s dev=+1.1 n=30\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "checked window/component; anomaly in emailservice mem/socket; implication as root cause",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=emailservice signal=mem",
+            "[metrics] id=M0002 window=0-30 component=emailservice signal=socket",
+            "[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket"
+          ],
+          "traces": [],
+          "logs": [],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "emailservice",
+              "reason": "mem"
+            },
+            {
+              "rank": 2,
+              "component": "emailservice",
+              "reason": "socket"
+            },
+            {
+              "rank": 3,
+              "component": "checkoutservice",
+              "reason": "socket"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 10.12,
+        "reasoner": 50.902,
+        "tool": 0.072,
+        "all": 61.094
+      }
+    },
+    {
+      "step": 2,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 30,
+              "components": [
+                "emailservice"
+              ]
+            },
+            "reasoning": "Validate emailservice mem/socket metrics in suspicious window 0-30"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 30,
+              "components": [
+                "emailservice"
+              ]
+            },
+            "reasoning": "Validate emailservice mem/socket metrics in suspicious window 0-30"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 30,\n    \"components\": [\n      \"emailservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 7,\n  \"matched_count\": 12,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=emailservice signal=mem value=86937053.9 unit=bytes dev=+4.4 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=emailservice signal=socket value=6 unit=count dev=+4.4 n=30\",\n    \"[metrics] id=M0019 window=0-30 component=emailservice signal=latency.p90 value=0.00469131 unit=s dev=+3.1 n=30\",\n    \"[traces] id=T0048 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.p99 value=481.9 unit=us dev=-0.4 n=14\",\n    \"[traces] id=T0049 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.self_p99 value=481.9 unit=us dev=-0.4 n=14\",\n    \"[traces] id=T0086 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=call.count value=14 unit=count dev=+0.0 n=14\",\n    \"[logs] id=L0024 window=0-30 component=emailservice template_id=10 level=INFO signal=log.count value=14 unit=count dev=+0.0 template=\\\"emailservice A request to send order confirmation email to someone@example.com has been received.\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 30,\n          \"components\": [\n            \"emailservice\"\n          ]\n        },\n        \"reasoning\": \"Validate emailservice mem/socket metrics in suspicious window 0-30\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 30,\\n    \\\"components\\\": [\\n      \\\"emailservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 7,\\n  \\\"matched_count\\\": 12,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=emailservice signal=mem value=86937053.9 unit=bytes dev=+4.4 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=emailservice signal=socket value=6 unit=count dev=+4.4 n=30\\\",\\n    \\\"[metrics] id=M0019 window=0-30 component=emailservice signal=latency.p90 value=0.00469131 unit=s dev=+3.1 n=30\\\",\\n    \\\"[traces] id=T0048 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.p99 value=481.9 unit=us dev=-0.4 n=14\\\",\\n    \\\"[traces] id=T0049 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.self_p99 value=481.9 unit=us dev=-0.4 n=14\\\",\\n    \\\"[traces] id=T0086 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=call.count value=14 unit=count dev=+0.0 n=14\\\",\\n    \\\"[logs] id=L0024 window=0-30 component=emailservice template_id=10 level=INFO signal=log.count value=14 unit=count dev=+0.0 template=\\\\\\\"emailservice A request to send order confirmation email to someone@example.com has been received.\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "checked emailservice mem/latency; mem anomaly strongest; root cause likely mem",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=emailservice signal=mem",
+            "[metrics] id=M0002 window=0-30 component=emailservice signal=socket",
+            "[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket",
+            "[metrics] id=M0019 window=0-30 component=emailservice signal=latency.p90"
+          ],
+          "traces": [
+            "[traces] id=T0048 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.p99",
+            "[traces] id=T0049 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.self_p99",
+            "[traces] id=T0086 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=call.count"
+          ],
+          "logs": [
+            "[logs] id=L0024 window=0-30 component=emailservice template_id=10 level=INFO signal=log.count"
+          ],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "emailservice",
+              "reason": "mem"
+            },
+            {
+              "rank": 2,
+              "component": "emailservice",
+              "reason": "latency"
+            },
+            {
+              "rank": 3,
+              "component": "checkoutservice",
+              "reason": "socket"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 6.353,
+        "reasoner": 19.08,
+        "tool": 0.014,
+        "all": 25.448
+      }
+    },
+    {
+      "step": 3,
+      "controller": {
+        "completed": false,
+        "tool_calls": [
+          {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 30,
+              "components": [
+                "emailservice",
+                "checkoutservice"
+              ]
+            },
+            "reasoning": "Compare emailservice mem and checkoutservice socket alternatives in the initial suspicious window"
+          }
+        ]
+      },
+      "tool_observations": [
+        {
+          "tool_call": {
+            "name": "get_evidence",
+            "args": {
+              "start_time": 0,
+              "end_time": 30,
+              "components": [
+                "emailservice",
+                "checkoutservice"
+              ]
+            },
+            "reasoning": "Compare emailservice mem and checkoutservice socket alternatives in the initial suspicious window"
+          },
+          "status": true,
+          "observation": "{\n  \"telemetry\": \"evidence\",\n  \"time_unit\": \"relative_seconds_from_case_start\",\n  \"query\": {\n    \"start_time\": 0,\n    \"end_time\": 30,\n    \"components\": [\n      \"checkoutservice\",\n      \"emailservice\"\n    ]\n  },\n  \"component_filter_rule\": {\n    \"metrics\": \"component matches\",\n    \"logs\": \"component matches\",\n    \"traces\": \"caller or callee matches\"\n  },\n  \"selection_policy\": \"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\",\n  \"ordering\": \"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\",\n  \"per_window_modality_limit\": 3,\n  \"latency_self_p99_definition\": \"callee span exclusive latency p99, computed as span duration minus direct child span durations\",\n  \"returned_count\": 9,\n  \"matched_count\": 65,\n  \"truncated\": false,\n  \"returned_windows\": [\n    {\n      \"start_time\": 0,\n      \"end_time\": 30\n    }\n  ],\n  \"next_start_time\": null,\n  \"lines\": [\n    \"[metrics] id=M0001 window=0-30 component=emailservice signal=mem value=86937053.9 unit=bytes dev=+4.4 n=30\",\n    \"[metrics] id=M0002 window=0-30 component=emailservice signal=socket value=6 unit=count dev=+4.4 n=30\",\n    \"[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket value=19 unit=count dev=+4.2 n=30\",\n    \"[traces] id=T0001 window=0-30 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.p99 value=500.8 unit=us dev=+3.5 n=25\",\n    \"[traces] id=T0002 window=0-30 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.self_p99 value=500.8 unit=us dev=+3.5 n=25\",\n    \"[traces] id=T0016 window=0-30 edge=checkoutservice>checkoutservice op=GetProduct signal=latency.self_p99 value=3397.3 unit=us dev=-1.0 n=25\",\n    \"[logs] id=L0018 window=0-30 component=checkoutservice template_id=30 level=info signal=log.count value=13 unit=count dev=-0.2 template=\\\"checkoutservice [PlaceOrder] user id=\\\\\\\"<:USERID:>\\\\\\\" user currency=<:CUR:>\\\"\",\n    \"[logs] id=L0022 window=0-30 component=checkoutservice template_id=11 level=info signal=log.count value=14 unit=count dev=+0.0 template=\\\"checkoutservice order confirmation email sent to \\\\\\\"someone@example.com\\\\\\\"\\\"\",\n    \"[logs] id=L0023 window=0-30 component=checkoutservice template_id=6 level=info signal=log.count value=14 unit=count dev=+0.0 template=\\\"checkoutservice payment went through (transaction id<:TRANSACTION ID:>\\\"\"\n  ]\n}"
+        }
+      ],
+      "status": true,
+      "observation": "{\n  \"tool_observations\": [\n    {\n      \"tool_call\": {\n        \"name\": \"get_evidence\",\n        \"args\": {\n          \"start_time\": 0,\n          \"end_time\": 30,\n          \"components\": [\n            \"emailservice\",\n            \"checkoutservice\"\n          ]\n        },\n        \"reasoning\": \"Compare emailservice mem and checkoutservice socket alternatives in the initial suspicious window\"\n      },\n      \"status\": true,\n      \"observation\": \"{\\n  \\\"telemetry\\\": \\\"evidence\\\",\\n  \\\"time_unit\\\": \\\"relative_seconds_from_case_start\\\",\\n  \\\"query\\\": {\\n    \\\"start_time\\\": 0,\\n    \\\"end_time\\\": 30,\\n    \\\"components\\\": [\\n      \\\"checkoutservice\\\",\\n      \\\"emailservice\\\"\\n    ]\\n  },\\n  \\\"component_filter_rule\\\": {\\n    \\\"metrics\\\": \\\"component matches\\\",\\n    \\\"logs\\\": \\\"component matches\\\",\\n    \\\"traces\\\": \\\"caller or callee matches\\\"\\n  },\\n  \\\"selection_policy\\\": \\\"components=[] returns metrics-only broad overview; component-filtered calls return metrics first, then traces, then logs\\\",\\n  \\\"ordering\\\": \\\"window asc, modality metrics->traces->logs, abs(dev) desc within a window/modality\\\",\\n  \\\"per_window_modality_limit\\\": 3,\\n  \\\"latency_self_p99_definition\\\": \\\"callee span exclusive latency p99, computed as span duration minus direct child span durations\\\",\\n  \\\"returned_count\\\": 9,\\n  \\\"matched_count\\\": 65,\\n  \\\"truncated\\\": false,\\n  \\\"returned_windows\\\": [\\n    {\\n      \\\"start_time\\\": 0,\\n      \\\"end_time\\\": 30\\n    }\\n  ],\\n  \\\"next_start_time\\\": null,\\n  \\\"lines\\\": [\\n    \\\"[metrics] id=M0001 window=0-30 component=emailservice signal=mem value=86937053.9 unit=bytes dev=+4.4 n=30\\\",\\n    \\\"[metrics] id=M0002 window=0-30 component=emailservice signal=socket value=6 unit=count dev=+4.4 n=30\\\",\\n    \\\"[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket value=19 unit=count dev=+4.2 n=30\\\",\\n    \\\"[traces] id=T0001 window=0-30 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.p99 value=500.8 unit=us dev=+3.5 n=25\\\",\\n    \\\"[traces] id=T0002 window=0-30 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.self_p99 value=500.8 unit=us dev=+3.5 n=25\\\",\\n    \\\"[traces] id=T0016 window=0-30 edge=checkoutservice>checkoutservice op=GetProduct signal=latency.self_p99 value=3397.3 unit=us dev=-1.0 n=25\\\",\\n    \\\"[logs] id=L0018 window=0-30 component=checkoutservice template_id=30 level=info signal=log.count value=13 unit=count dev=-0.2 template=\\\\\\\"checkoutservice [PlaceOrder] user id=\\\\\\\\\\\\\\\"<:USERID:>\\\\\\\\\\\\\\\" user currency=<:CUR:>\\\\\\\"\\\",\\n    \\\"[logs] id=L0022 window=0-30 component=checkoutservice template_id=11 level=info signal=log.count value=14 unit=count dev=+0.0 template=\\\\\\\"checkoutservice order confirmation email sent to \\\\\\\\\\\\\\\"someone@example.com\\\\\\\\\\\\\\\"\\\\\\\"\\\",\\n    \\\"[logs] id=L0023 window=0-30 component=checkoutservice template_id=6 level=info signal=log.count value=14 unit=count dev=+0.0 template=\\\\\\\"checkoutservice payment went through (transaction id<:TRANSACTION ID:>\\\\\\\"\\\"\\n  ]\\n}\"\n    }\n  ]\n}",
+      "reasoner": {
+        "analysis": "checked emailservice mem/socket; mem anomaly strongest; root cause likely mem",
+        "state": {
+          "metrics": [
+            "[metrics] id=M0001 window=0-30 component=emailservice signal=mem",
+            "[metrics] id=M0002 window=0-30 component=emailservice signal=socket",
+            "[metrics] id=M0003 window=0-30 component=checkoutservice signal=socket",
+            "[metrics] id=M0019 window=0-30 component=emailservice signal=latency.p90"
+          ],
+          "traces": [
+            "[traces] id=T0048 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.p99",
+            "[traces] id=T0049 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=latency.self_p99",
+            "[traces] id=T0086 window=0-30 edge=checkoutservice>emailservice op=SendOrderConfirmation signal=call.count",
+            "[traces] id=T0001 window=0-30 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.p99",
+            "[traces] id=T0002 window=0-30 edge=checkoutservice>productcatalogservice op=GetProduct signal=latency.self_p99",
+            "[traces] id=T0016 window=0-30 edge=checkoutservice>checkoutservice op=GetProduct signal=latency.self_p99"
+          ],
+          "logs": [
+            "[logs] id=L0024 window=0-30 component=emailservice template_id=10 level=INFO signal=log.count",
+            "[logs] id=L0018 window=0-30 component=checkoutservice template_id=30 level=info signal=log.count"
+          ],
+          "rankings": [
+            {
+              "rank": 1,
+              "component": "emailservice",
+              "reason": "mem"
+            },
+            {
+              "rank": 2,
+              "component": "emailservice",
+              "reason": "socket"
+            },
+            {
+              "rank": 3,
+              "component": "checkoutservice",
+              "reason": "socket"
+            }
+          ]
+        }
+      },
+      "timing_s": {
+        "controller": 97.209,
+        "reasoner": 15.962,
+        "tool": 0.011,
+        "all": 113.181
+      }
+    },
+    {
+      "step": 4,
+      "controller": {
+        "completed": true
+      },
+      "observation": "Controller marked analysis complete.",
+      "reasoner": {
+        "analysis": "emailservice mem anomaly strongest; checkoutservice trace latency validates; emailservice mem likely root cause",
+        "final_ranking": [
+          {
+            "time": 0,
+            "component": "emailservice",
+            "reason": "mem"
+          },
+          {
+            "time": 0,
+            "component": "checkoutservice",
+            "reason": "latency"
+          },
+          {
+            "time": 0,
+            "component": "emailservice",
+            "reason": "socket"
+          }
+        ]
+      },
+      "timing_s": {
+        "controller": 66.523,
+        "reasoner": 29.319,
+        "tool": 0.0,
+        "all": 95.842
+      }
+    }
+  ],
+  "timing_s": {
+    "all": 295.569
+  }
+}
